@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -23,12 +25,16 @@ jobs:
 
       - name: Installing dependencies
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Testing catalog hook and docs examples
+        run: |
+          python -m pytest -q tests
 
       - name: Build and Deployment
         if: github.event.action != 'closed'
         run: |
-          mkdocs build
+          mkdocs build --strict
 
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1

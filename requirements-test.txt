@@ -1,0 +1,4 @@
+# Test-only dependencies; the site build itself needs only requirements.txt.
+-r requirements.txt
+numpy>=1.26
+pytest>=8.0

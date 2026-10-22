@@ -1,77 +1,49 @@
 # Maritime Robotics Landscape
 
-A comprehensive collection of resources for maritime robotics development with ROS.
+A community reference for ROS-based maritime robotics: software, simulators, drivers, frame conventions, hardware, field operations, datasets, and events. Curated by the ROS Maritime Community Working Group.
 
-This landscape covers:
-- Surface vehicles (ASV/USV) and underwater vehicles (AUV/ROV/gliders)
-- Simulation environments and sensor modeling
-- Control systems, guidance, and autonomy frameworks
-- Drivers, interfaces, and communication protocols
-- Datasets, tools, and educational resources
+**Website: <https://ros-maritime.oceansoft.org/>**
 
-## Website
+## What is on the site
 
-Rendered site: Publish via your deployment workflow, or use `mkdocs serve` for a local preview.
+| Section | Contents |
+|---|---|
+| Start here | Getting started, learning path and tutorials, FAQ, glossary |
+| Software | Searchable package catalog, autonomy frameworks, simulation, drivers and interfaces, frames and conventions, control, localization, perception, communication, tools, integration examples, quick reference |
+| Hardware | Vehicle types; sensors and components with ROS 2 driver status |
+| Field operations | Checklists, power budgets, failure modes, maintenance |
+| Datasets | Sonar, underwater imagery, navigation, USV perception, ocean data |
+| Community | Working group meetings and channels, events and competitions, contributing |
 
-## Index
+## How it works
 
-* [Vehicle Types](docs/vehicle_types.md) - Surface and underwater vehicle platforms
-* [Autonomy Stacks](docs/autonomy_stacks.md) - Full-stack frameworks and systems
-* [Simulation](docs/simulation.md) - Gazebo, Stonefish, and other simulators
-* [Hardware](docs/hardware.md) - Platforms, sensors, and components
-* [Software](docs/software.md) - Control, localization, perception, and tools
-* [Drivers](docs/drivers.md) - Hardware drivers and interfaces
-* [Datasets](docs/datasets.md) - Training data and test collections
-* [Education & Tutorials](docs/education_and_tutorials.md) - Learning resources
-* [Events](docs/events.md) - Competitions, conferences, and workshops
-
-## Community
-
-This landscape is a community project curated by the ROS Maritime Robotics Working Group.
-
-**Get Involved:**
-* **Meetings:** Monthly (see schedule in the [Google Doc](https://docs.google.com/document/d/1Wnddq4xRXR6HF2XFWeejfUGII_hj7DilKrGcFj1qlEA/edit?usp=drive_link))
-* **Zulip Chat:** [Marine Robotics channel](https://openrobotics.zulipchat.com/#narrow/channel/526058-Marine-Robotics)
-* **Discourse:** [Maritime Robotics Category](https://discourse.ros.org/c/maritime/36)
-* **Project Board:** [GitHub Projects](https://github.com/orgs/ros-maritime/projects)
+- Pages are Markdown in `docs/`, built with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+- Every package table and the interactive catalog come from one curated file, [`data/catalog.yml`](data/catalog.yml), rendered by the build hook [`hooks/catalog.py`](hooks/catalog.py).
+- A weekly workflow runs [`scripts/update_repo_status.py`](scripts/update_repo_status.py), which reads the latest commit date (and the GitHub archived flag) of each repository and opens a pull request that updates [`data/repo_status.yml`](data/repo_status.yml).
+- Every push to `main` builds the site with `mkdocs build --strict` and deploys it to GitHub Pages. Pull requests get a preview build.
 
 ## Contributing
 
-Contributions to the landscape are highly encouraged! From simple fixes to spelling and grammar all the way to adding new sections.
+Corrections and additions are welcome. Small changes: use the pencil button on any page of the website. Larger changes: see the [Contributing page](https://ros-maritime.oceansoft.org/contributing/) ([source](docs/contributing.md)).
 
-### Quick Changes on GitHub
+Local preview:
 
-Simple changes can be made by clicking the "Edit on GitHub" link at the top of any page on the website.
+```bash
+git clone https://github.com/ros-maritime/maritime_robotic_landscape.git
+cd maritime_robotic_landscape
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+mkdocs serve            # http://127.0.0.1:8000
+mkdocs build --strict   # run before you open a pull request
+```
 
-1. Open the page you want to edit
-2. Click the "Edit on GitHub" link
-3. Make changes in the online editor
-4. Create a pull request
+## Community
 
-### Local Development
-
-For substantial changes, including new pages or images:
-
-1. Clone the repository:
-   ```bash
-   git clone <repo-url>
-   cd maritime_robotic_landscape
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Start local server:
-   ```bash
-   mkdocs serve
-   ```
-
-4. View at `localhost:8000`
-
-5. Make your changes and create a pull request
+- **Forum:** [ROS Discourse, Marine Robotics](https://discourse.openrobotics.org/c/community-groups/marine-robotics/36)
+- **Chat:** [Zulip, Marine Robotics channel](https://openrobotics.zulipchat.com/#narrow/channel/526058-Marine-Robotics)
+- **Meetings:** monthly, announced on Discourse; [agendas and minutes](https://docs.google.com/document/d/1Wnddq4xRXR6HF2XFWeejfUGII_hj7DilKrGcFj1qlEA/edit?usp=drive_link); [calendar invites](https://groups.google.com/g/maritime-robotics-working-group-invites)
+- **Project board:** [GitHub Projects](https://github.com/orgs/ros-maritime/projects)
 
 ## License
 
-This documentation is provided under the Creative Commons Attribution-ShareAlike 4.0 International License.
+The documentation is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).

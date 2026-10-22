@@ -1,334 +1,117 @@
-# Events and Competitions
+---
+title: Events and competitions
+description: Maritime robotics competitions, conferences, workshops, and community meetings, with upcoming dates and how to take part.
+---
 
-Maritime robotics competitions, conferences, workshops, and community meetings.
+# Events and competitions
+
+Competitions, conferences, and workshops where the maritime robotics community meets. Dates were checked in October 2026 from official announcements; always confirm on the official site before you make plans.
+
+## Coming up
+
+| Dates | Event | Location |
+|---|---|---|
+| Oct 25-26, 2026 | ROSCon Singapore | Singapore |
+| Nov 8-14, 2026 | [Maritime RobotX Challenge](https://robotx.org/2026) (6th edition) | Marina Bay, Singapore |
+| Nov 25-26, 2026 | ROSCon Belgium | Nivelles, Belgium |
+| Monthly | [Maritime Community Working Group meeting](community.md#meetings) | Online |
+| Apr 6-8, 2027 | Ocean Business | National Oceanography Centre, Southampton, UK |
+| May 24-28, 2027 | [ICRA 2027](https://www.ieee-ras.org/conferences-workshops/fully-sponsored/icra) | Seoul, South Korea |
+| 2027 (dates to be announced) | OCEANS 2027 | Aberdeen, UK |
 
 ## Competitions
 
-### Virtual RobotX (VRX)
+<div class="grid cards" markdown>
 
-**Website:** [https://github.com/osrf/vrx](https://github.com/osrf/vrx)
+-   :material-sail-boat:{ .lg } **[Maritime RobotX Challenge](https://robotx.org/)**
 
-The Virtual RobotX is a simulation-based competition for autonomous surface vehicles.
+    ---
 
-**Format:**
-- Virtual competition in Gazebo simulation
-- Teams develop autonomy algorithms
-- Standardized platform per competition rules (often a WAM-V)
-- Various tasks (navigation, perception, manipulation)
+    RoboNation, with ONR and partners. Biennial on-water ASV competition on the WAM-V platform: navigation, perception, docking, and, from 2026, mandatory multi-vehicle autonomy.
 
-**Tasks include:**
-- Waypoint navigation
-- Channel navigation
-- Object detection and classification
-- Docking
-- Acoustic perception
-- Manipulation challenges
+    *Next:* November 8-14, 2026, Singapore.
 
-**Frequency:** Periodic (check website for announcements)
+-   :material-monitor-dashboard:{ .lg } **[Virtual RobotX (VRX)](https://github.com/osrf/vrx)**
 
-**Status:** Check the [VRX GitHub repository](https://github.com/osrf/vrx) for current announcements and schedules.
+    ---
 
-**Participation:**
-- Teams register online
-- Develop code locally
-- Submit for evaluation
-- Virtual competition events
+    Simulation-only version of RobotX in Gazebo. The last competition edition was VRX 2023, and no later edition is announced. The simulator is maintained and is the best free way to start with ASV autonomy.
 
-**Benefits:**
-- No vehicle hardware required
-- Accessible globally
-- Learn maritime robotics fundamentals
-- Networking with community
+-   :material-submarine:{ .lg } **[RoboSub](https://robosub.org/)**
 
-### MBZIRC Maritime Grand Challenge
+    ---
 
-**Website:** [https://www.mbzirc.com/](https://www.mbzirc.com/)
+    RoboNation. Student AUV competition with tasks in a pool: gates, targets, manipulation, and acoustic pingers.
 
-The Mohamed Bin Zayed International Robotics Challenge includes maritime robotics tasks.
+    *2026:* 29th edition, July 11-16, Irvine, California, 58 teams.
 
-**Format:**
-- Physical and simulation competitions
-- Multi-domain challenges (aerial + maritime)
-- Collaborative tasks
-- Advanced autonomy requirements
+-   :material-robot-industrial:{ .lg } **[MATE ROV Competition](https://materovcompetition.org/)**
 
-**Challenges:**
-- Multi-robot coordination
-- Object manipulation
-- Search and retrieval
-- Autonomous navigation
+    ---
 
-**Frequency:** Periodic (check the official site for schedules)
+    MATE Inspires. Student ROV competition from middle school to university, with regional events that lead to a World Championship. Teams build their own vehicles and present engineering documentation.
 
-**Status:** The MBZIRC Maritime Grand Challenge final demonstration ran from January 11 to February 6, 2024; the official results note no winners, and recognize UNIZG-FER, Team KAIST, and FLY EAGLE as best performing teams. Three of five finalist teams completed the inspection task. See the official results page for details: [Final Results](https://www.mbzirc.com/grand-challenge-final-results).
+    *2026:* World Championship June 25-27, St. John's, Newfoundland, Canada.
 
-**Prize Money:** More than US$3 million in prize money (per [ASPIRE announcement](https://www.mbzirc.com/news/abu-dhabis-aspire-launches-over-us3-million-mbzirc-maritime-grand-challenge)).
+-   :material-fish:{ .lg } **[SAUVC](https://sauvc.org/)**
 
-### RobotX Competition
+    ---
 
-**Website:** [http://robotx.org/](http://robotx.org/)
+    Singapore AUV Challenge, organized by IEEE OES Singapore with NUS and Singapore Polytechnic. Pool-based AUV tasks for students.
 
-Physical autonomous surface vehicle competition (VRX is the virtual counterpart).
+    *2026:* May 28-31, held with OCEANS 2026 in Sanya, China (the first edition outside Singapore).
 
-**Format:**
-- On-water competition
-- Standardized platform per competition rules
-- Teams bring perception, autonomy, and control systems
+-   :material-ferry:{ .lg } **Njord Autonomous Ship Challenge**
 
-**Location:** Varies by year (check the official site)
+    ---
 
-**Tasks:** Similar to VRX but with real environmental challenges
+    NTNU, Trondheim. Student teams build and program autonomous vessels for tasks set by the organizers.
 
-**Frequency:** Periodic (check the official site)
+    *2026:* August 10-14, Trondheim, Norway.
 
-### Student Competitions
+</div>
 
-#### SAUVC (Singapore AUV Challenge)
+### Past challenges
 
-**Website:** [https://sauvc.org/](https://sauvc.org/)
+- **[MBZIRC Maritime Grand Challenge](https://www.mbzirc.com/grand-challenge-final-results)**: USV and UAV teams in the Arabian Gulf. The finals were in Abu Dhabi in early 2024, with a prize pool of more than US$3 million. University of Zagreb (UNIZG-FER) was the best-performing team. The simulator is still public ([osrf/mbzirc](https://github.com/osrf/mbzirc)).
+- **SAUC-E** (Student Autonomous Underwater Challenge - Europe): the last known edition was in 2016.
 
-Underwater robotics competition for students.
+### Which competition suits you?
 
-**Format:**
-- Pool-based tasks
-- Autonomous underwater navigation
-- Object detection and manipulation
-- Time-based scoring
-
-**Participants:** Student teams (see competition rules for eligibility)
-
-**Tasks:**
-- Gate passing
-- Target acquisition
-- Object manipulation
-- Autonomous behaviors
-
-#### MATE ROV Competition
-
-**Website:** [https://www.mateinspires.org/](https://www.mateinspires.org/)
-
-Student ROV competition with multiple classes.
-
-**Format:**
-- Student divisions
-- Remotely operated vehicle tasks
-- Engineering documentation
-- Team presentations
-
-**Tasks:**
-- Underwater work simulations
-- Real-world mission scenarios
-- Manipulation and sampling
-
-#### European Robotics League (ERL) - Emergency
-
-Includes maritime emergency response scenarios.
-
-**Format:**
-- Search and rescue missions
-- Multi-robot systems
-- Realistic disaster scenarios
+| | VRX (simulator) | MATE ROV | SAUVC | RoboSub | RobotX | Njord |
+|---|---|---|---|---|---|---|
+| Hardware needed | None | ROV you build | AUV you build | AUV you build | Your autonomy on a WAM-V | Model-scale vessel |
+| Level | Any | School to university | University | University | University and research | University |
+| Autonomy | Full | Mostly piloted | Full | Full | Full, multi-vehicle | Full |
+| Good first step if... | You want to learn ASV autonomy now | You want a build project with a team | You are in Asia-Pacific | You want a demanding AUV project | Your team has funding and support | You are interested in autonomous shipping |
 
 ## Conferences
 
-### OCEANS Conference
+| Conference | Focus | Recent and next |
+|---|---|---|
+| [MTS/IEEE OCEANS](https://oceansconference.org/) | Ocean engineering and technology; large exhibition | 2026: Sanya (May 25-28) and Monterey (Sep 21-24). 2027: Aberdeen |
+| [IEEE/OES AUV Symposium](https://ieeeoes.org/) | Autonomous underwater vehicles | 2026: Southampton, UK, Sep 1-3. Biennial |
+| [ICRA](https://www.ieee-ras.org/conferences-workshops/fully-sponsored/icra) | Robotics; marine sessions and workshops | 2026: Vienna, Jun 1-5. 2027: Seoul, May 24-28 |
+| [IROS](https://2026.ieee-iros.org/) | Robotics; marine sessions and workshops | 2026: Pittsburgh, Sep 27 - Oct 1 |
+| [ROSCon](https://roscon.ros.org/) | ROS developers; marine talks in recent years | 2026: Toronto, Sep 22-24; regional events in Paris, Shanghai, Singapore, and Belgium |
+| Oceanology International | Ocean technology exhibition and conference | Biennial in London; 2026: Mar 10-12 |
+| Ocean Business | Ocean technology exhibition with in-water demonstrations | 2027: Southampton, Apr 6-8 |
 
-**Website:** [https://oceansconference.org/](https://oceansconference.org/)
+## Workshops and schools
 
-Premier conference for marine technology and ocean engineering.
+- **Breaking the Surface**: annual field workshop on marine robotics run by LABUST (University of Zagreb) in Croatia, with lectures and at-sea demonstrations. See the [Breaking the Surface page](https://www.fer.unizg.hr/labust/activities/bts).
+- **ICRA and IROS marine robotics workshops**: topics include marine perception, underwater manipulation, and long-term autonomy. Check each year's workshop list.
+- **REMARO** (Reliable AI for Marine Robotics) ran summer schools and hackathons; materials from the [TU Delft 2022 hackathon](https://github.com/remaro-network/tudelft_hackathon) are public.
+- **MOOS-DAWG**: annual MOOS-IvP developers and users workshop at MIT.
 
-**Locations:** Alternates between IEEE/MTS OCEANS and MTS/IEEE OCEANS
+## Community meetings
 
-**Content:**
-- Technical paper presentations
-- Industry exhibitions
-- Tutorials and workshops
-- Networking events
+The ROS Maritime Community Working Group meets online every month. Meetings are open to everyone and include project presentations and discussion. See [Community](community.md#meetings) for how to join.
 
-**Topics:**
-- Ocean observing systems
-- Underwater vehicles and robotics
-- Marine renewable energy
-- Ocean acoustics
-- Subsea engineering
+## Taking part
 
-**Frequency:** Annual (sometimes multiple events per year in different regions)
+**Competitions**: form a team early, read the rules for the year, and develop in simulation first (VRX for surface vehicles; Gazebo, Stonefish, or a team simulator for AUVs). Keep good engineering documentation; most competitions score it.
 
-**ROS Maritime Relevance:**
-- Papers on AUV/ASV autonomy
-- Sensor integration
-- Communication systems
-- Field deployments
+**Conferences**: submit papers or workshop abstracts, or present a poster. Many conferences offer student registration rates and travel grants.
 
-### ICRA (International Conference on Robotics and Automation)
-
-**Website:** [https://www.ieee-ras.org/conferences-workshops/fully-sponsored/icra](https://www.ieee-ras.org/conferences-workshops/fully-sponsored/icra)
-
-Major robotics conference with maritime robotics sessions.
-
-**Maritime Topics:**
-- Underwater SLAM
-- Marine robot planning and control
-- Multi-robot coordination
-- Bio-inspired underwater robots
-
-**Frequency:** Annual
-
-**Format:**
-- Paper presentations
-- Workshops (including maritime-focused)
-- Demos and exhibitions
-- Industry sessions
-
-### IROS (Intelligent Robots and Systems)
-
-International conference on intelligent robots, including marine systems.
-
-**Content:** Similar to ICRA with broader scope
-
-**Frequency:** Annual
-
-### Autonomous Underwater Vehicles (AUV) Symposium
-
-Focused conference specifically on AUVs.
-
-**Content:**
-- Latest AUV technology
-- Field reports
-- Research developments
-- Industry perspectives
-
-**Frequency:** Biennial
-
-## Workshops
-
-### ICRA/IROS Maritime Robotics Workshops
-
-Specialized workshops at major robotics conferences:
-
-**Topics:**
-- Marine perception
-- Underwater manipulation
-- Long-range autonomy
-- Swarm robotics
-- Sim-to-real transfer
-
-**Format:**
-- Invited talks
-- Contributed presentations
-- Panel discussions
-- Networking
-
-### REMARO Workshops
-
-**Network:** REMARO (Reliable AI for Marine Robotics)
-
-**Events:**
-- Summer schools
-- Hackathons
-- Training courses
-- Collaborative workshops
-
-**Past Events:**
-- [TU Delft Hackathon 2022](https://github.com/remaro-network/tudelft_hackathon)
-
-## ROS Maritime Working Group Meetings
-
-### Regular WG Meetings
-
-**Schedule:** Monthly (see schedule for current times)
-
-**Format:**
-- Virtual meetings (online)
-- Open to all community members
-- Rotating topics and presentations
-
-**Typical Agenda:**
-- Project updates
-- Package demonstrations
-- Technical discussions
-- Community announcements
-
-**How to Join:**
-1. Watch for announcements on [ROS Discourse](https://discourse.ros.org/c/maritime/36)
-2. Join the [Google Group](https://groups.google.com/g/maritime-robotics-working-group-invites) for calendar invites
-3. Join via Zulip chat for informal discussion
-
-**Meeting Notes:** [Google Doc](https://docs.google.com/document/d/1Wnddq4xRXR6HF2XFWeejfUGII_hj7DilKrGcFj1qlEA/edit?usp=drive_link)
-
-**Recordings:** Posted to Discourse after meetings
-
-### Special Events
-
-- Package release announcements
-- Guest presentations
-- Collaborative development sessions
-- Competition debriefs
-
-## Regional Events
-
-### Europe
-
-* **European Robotics Forum:** Annual robotics event
-* **National maritime robotics days:** Various countries
-* **University open houses:** Robotics lab demonstrations
-
-### North America
-
-* **ROSCon:** Annual ROS conference (maritime track when applicable)
-* **IEEE conferences:** Regional robotics events
-* **University competitions:** Various student events
-
-### Asia-Pacific
-
-* **SAUVC:** Singapore AUV Challenge
-* **Regional ROV competitions**
-* **Research symposia**
-
-## Upcoming Events
-
-!!! info "Event Calendar"
-    For the latest event information and registration:
-
-    * Check [ROS Discourse Maritime Category](https://discourse.ros.org/c/maritime/36)
-    * Follow robotics conference websites
-    * Join the Maritime Robotics WG Zulip chat for announcements
-
-### 2025 Events (Check for Updates)
-
-* **ROS Maritime WG Meetings:** Monthly (see schedule above)
-* **OCEANS 2025:** Check [oceansconference.org](https://oceansconference.org/) for dates and locations
-* **ICRA 2025:** Check the [IEEE RAS website](https://2025.ieee-icra.org/) for dates and location
-* **IROS 2025:** Check the official IROS website for dates and location
-* **VRX:** Monitor [GitHub](https://github.com/osrf/vrx) for announcements
-* **MBZIRC:** Check [mbzirc.com](https://www.mbzirc.com/) for future competition dates
-
-## How to Participate
-
-### Competitions
-
-1. **Form a Team:** Gather interested members
-2. **Register Early:** Competitions have registration deadlines
-3. **Prepare:** Use simulation environments to develop
-4. **Document:** Maintain good engineering documentation
-5. **Engage:** Connect with other teams and organizers
-
-### Conferences
-
-1. **Submit Papers:** Research contributions
-2. **Attend Virtually/In-Person:** Many offer hybrid options
-3. **Present Posters:** Alternative to full papers
-4. **Network:** Connect with researchers and industry
-
-### Community Meetings
-
-1. **Join Zulip Chat:** Real-time discussion
-2. **Attend WG Meetings:** Monthly maritime robotics meetings (see schedule)
-3. **Contribute:** Share projects and experiences
-4. **Collaborate:** Find collaborators for projects
-
----
-
-*This page was last updated: {{ git_revision_date_localized }}*
-
---8<-- "docs/goatcounter.html"
+**Know of an event we missed?** Add it with a pull request, or post it on [Discourse](https://discourse.openrobotics.org/c/community-groups/marine-robotics/36).

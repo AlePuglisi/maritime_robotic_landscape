@@ -1,520 +1,185 @@
-# Hardware, Platforms, and Components
+---
+title: Sensors and components
+description: Navigation sensors, sonars, thrusters, power, housings, and platforms for marine robots, with selection criteria and ROS 2 driver status.
+---
 
-This page covers commercial and research platforms, development kits, sensors, and components for maritime robotics.
+# Sensors and components
 
-## Commercial UUV Platforms
+This page helps you choose hardware with software in mind: what each component does, what to compare, and whether it has a maintained ROS 2 driver. Prices and specifications change often; use vendor datasheets and quotes for decisions.
 
-### BlueROV2
+!!! info "Driver status"
 
-The BlueROV2 is a commercial ROV platform used in research and education.
+    Driver availability below was checked in October 2026. The [Drivers](drivers.md#ros-2-driver-status-by-vendor) page has the full table with links.
 
-**Specifications:**
-- **Type:** ROV (can be converted to AUV with additional hardware)
-- **Depth Rating:** Varies by configuration; see vendor specifications
-- **Thrusters:** Multi-thruster configuration (vendor-specific)
-- **Payload:** Cameras, sonar, manipulator options
-- **Power:** Tethered
+## Platforms
 
-**ROS Support:**
-- Community-maintained Gazebo models and ROS drivers are available; verify compatibility for your ROS version
+### Commercial underwater platforms
 
-**Manufacturer:** Blue Robotics
+| Platform | Type | ROS support |
+|---|---|---|
+| Blue Robotics BlueROV2 | Small observation-class ROV (base and heavy configurations) | ArduSub autopilot; ROS 2 through mavros or ardusub_driver; Gazebo models; Blue and Orca stacks |
+| IQUA Robotics Girona 500, Sparus II | Hovering and torpedo AUVs for research | COLA2 (ROS 1, licensed); Stonefish simulation |
+| MBARI LRAUV (Tethys class) | Long-range AUV | Vendor controller; Gazebo simulation (archived) |
+| Work-class and inspection ROVs (various) | Larger ROVs with manipulators | Vendor control systems; ROS usually added through custom interfaces |
 
-### LRAUV-Based Systems
+### Commercial surface platforms
 
-Long-range AUVs based on MBARI's open designs. See MBARI documentation for capabilities and sensor suites.
+| Vendor | Platforms | Notes |
+|---|---|---|
+| Maritime Robotics (Norway) | Otter, Otter X, Mariner, Mariner X | Survey and research USVs |
+| L3Harris (formerly ASV Global) | C-Worker series | Work-class USVs |
+| Blue Robotics | BlueBoat | Small USV on ArduPilot Rover and BlueOS |
+| Ocean Aero | Submaran | Wind and solar powered surface/subsurface vehicle |
+| WAM-V (Marine Advanced Research) | Wave Adaptive Modular Vessel | RobotX platform; simulated in VRX |
 
-## Commercial USV/ASV Platforms
+Many research groups build their own vehicles. Open designs and community builds are a good start; ask on the [community channels](community.md).
 
-Commercial autonomous surface vehicles are available from various manufacturers:
+## Navigation sensors
 
-* **Survey Vessels:** Hydrographic mapping-focused platforms
-* **Multi-purpose ASVs:** Configurable for various missions
-* **Research Platforms:** Universities and labs maintain custom ASV designs
+### Doppler Velocity Log (DVL)
 
-**Key Suppliers:**
-- Maritime Robotics (Mariner, Otter)
-- ASV Global
-- L3Harris (C-Worker series)
-- Ocean Aero (Submaran S10)
+A DVL measures velocity relative to the seafloor (bottom track) or to the water (water track) from the Doppler shift of acoustic beams, and usually also altitude. It is the main dead-reckoning sensor of most AUVs. See [Localization](navigation.md#dead-reckoning-with-a-dvl).
 
-## Development Kits
+| Vendor | Example products | ROS 2 driver |
+|---|---|---|
+| Water Linked | DVL A50, A125 | :material-check-circle:{ .mrl-yes } Official ([waterlinked_dvl](https://github.com/waterlinked/waterlinked_dvl)) |
+| Nortek | Nucleus, DVL500, DVL1000 | :material-check-circle:{ .mrl-yes } Official for Nucleus ([nucleus_driver](https://github.com/nortekgroup/nucleus_driver)) |
+| Teledyne RDI | Pathfinder, Tasman, Workhorse | Community and lab drivers only |
+| LinkQuest | NavQuest | None public found |
 
-### Research Platforms
+**Choose by:**
 
-* **University Custom Designs:** Many labs build custom platforms
-* **Open-source Designs:** Community-shared hull designs and electronics
+1. **Bottom-track range** at your operating altitude. Lower frequency gives more range; higher frequency gives better accuracy at short range and is smaller.
+2. **Minimum altitude**, for vehicles that work close to the bottom.
+3. **Depth rating, size, and power**, for small vehicles.
+4. **Accuracy** (long-term velocity error as a percentage of speed) from the datasheet.
+5. **Interface and driver**: Ethernet or serial, and a maintained ROS 2 driver.
+6. **Interference**: check how pinging is triggered and synchronized with your sonars and modem.
 
-## Sensors
+### Inertial navigation (INS / IMU / AHRS)
 
-### Navigation Sensors
+| Class | Gyro technology | Heading source | Typical use |
+|---|---|---|---|
+| IMU / AHRS | MEMS | Magnetometer | Small ROVs, ASVs, budget AUVs. Magnetic heading suffers near thrusters and steel |
+| GNSS-aided INS | MEMS or tactical | Dual-antenna GNSS or magnetometer | ASVs and surface navigation |
+| Navigation-grade INS | Fiber-optic (FOG) or ring-laser gyro | Gyrocompassing (true north from Earth rotation) | Survey AUVs, deep vehicles; DVL-aided dead reckoning |
 
-#### Doppler Velocity Log (DVL)
+| Vendor | Example products | ROS 2 driver |
+|---|---|---|
+| SBG Systems | Ellipse, Ekinox, Apogee | :material-check-circle:{ .mrl-yes } Official, binary release |
+| MicroStrain by HBK | 3DM-GX5, CV7, GQ7 | :material-check-circle:{ .mrl-yes } Official, binary release |
+| Xsens (Movella) | MTi series | :material-check-circle:{ .mrl-yes } Vendor support repository |
+| Advanced Navigation | Spatial, Certus, Boreas | :material-check-circle:{ .mrl-yes } Vendor example driver (Humble) |
+| VectorNav | VN-100, VN-200, VN-300 | Community driver |
+| Exail (formerly iXblue) | PHINS, Rovins | None public |
+| Kearfott, Sonardyne (SPRINT), Sparton | Various | None public |
 
-Essential for underwater navigation, DVLs measure velocity relative to the seafloor or water column.
+**Choose by:** gyro bias stability (drift), heading accuracy and its source, the ability to take DVL and GNSS aiding inside the INS, depth rating, and interfaces.
 
-**Manufacturers:**
-- Teledyne RDI
-- Nortek
-- LinkQuest
-- Water Linked (note: DVL-A50 driver repo is archived)
+### Depth and pressure
 
-⚠️ **Driver Note:** The [waterlinked/dvl-a50-ros-driver](https://github.com/waterlinked/dvl-a50-ros-driver) GitHub repository is archived (last push 2024-02-26). For DVL driver options, see the [WHOI Deep Submergence Lab drivers](drivers.md#whoi-deep-submergence-lab-drivers).
+Pressure sensors give depth with good accuracy, and they are simple and reliable. Compare range, accuracy as a percentage of full scale, temperature compensation, and sampling rate. Example: Blue Robotics Bar30 and Bar100 for small vehicles; Paroscientific and Keller for high accuracy. See [depth conversion](conventions.md#depth-pressure-and-altitude).
 
-**Key Features:**
-- Bottom-track and water-track modes
-- Altitude measurement
-- Beam configurations and accuracy depend on model (see datasheets)
+### GNSS
 
-**ROS Integration:** See [Drivers page](drivers.md#dvl-doppler-velocity-log) for available ROS drivers
+- **Standard GNSS** for general surface positioning.
+- **RTK GNSS** for centimeter-level survey positioning, with a base station or correction service (NTRIP).
+- **Dual-antenna GNSS** for heading without a magnetometer, important for ASVs at low speed.
 
-#### DVL Selection Guide
+Drivers: nmea_navsat_driver, ublox_dgnss, ublox, swiftnav-ros2 (see [Drivers](drivers.md)).
 
-Choosing the right DVL depends on mission requirements, budget, and operational environment.
+## Acoustic positioning
 
-**Comparison Matrix:**
+| System | Example vendors | Notes |
+|---|---|---|
+| USBL | Sonardyne, EvoLogics, Kongsberg | Topside array tracks the vehicle; the fix must be sent down to the vehicle if it navigates on it |
+| SBL | Water Linked Underwater GPS | Receivers spread around the topside platform; popular with small ROVs |
+| LBL | Sonardyne, Kongsberg | Seafloor beacons, highest accuracy over an area |
+| Modem ranging | WHOI Micro-Modem, EvoLogics | Ranges from the communication modem itself |
 
-| Vendor | Model | Spec Sheet |
-|--------|-------|------------|
-| **Teledyne RDI** | [Tasman DVL](https://www.teledynemarine.com/en-us/products/SiteAssets/RD%20Instruments/Tasman_DVL.pdf) | Teledyne Marine datasheet |
-| **Nortek** | [DVL1000](https://www.nortekgroup.com/products/dvl-1000-300m) | [DVL1000 datasheet](https://www.nortekgroup.com/export/pdf/DVL1000%20-%204000%20m.pdf) |
-| **Nortek** | [DVL500](https://www.nortekgroup.com/products/dvl500-300-m) | Nortek product page |
-| **Water Linked** | [DVL A50](https://waterlinked.com/dvl/) | Water Linked product page |
+See [Localization](navigation.md#acoustic-positioning).
 
-**Decision Criteria:**
+## Sonar
 
-1. **Budget-Constrained:**
-   - ⚠️ Water Linked DVL A50 driver repo is archived; confirm driver support before selecting
-   - Consider used DVLs or phased procurement
-   - Alternative: Dead reckoning with high-quality INS only (limited duration)
+| Type | Example products | Driver status |
+|---|---|---|
+| Echosounder | Blue Robotics Ping2 | Community (blueos-ros2, ping-python) |
+| Mechanically scanned imaging | Blue Robotics Ping360, Tritech Micron | Ping360: community ROS 2 drivers |
+| Multibeam imaging / FLS | Blueprint Subsea Oculus, Teledyne BlueView | Oculus: community ROS 2 drivers |
+| Multibeam echosounder | Cerulean Surveyor, Norbit, Kongsberg, R2Sonic | Cerulean: community ROS 2 driver |
+| Side-scan | EdgeTech, Klein, Imagenex, Tritech | Mostly vendor software |
 
-2. **Shallow Water Research:**
-   - Prioritize compact, lower-power DVLs with reliable bottom-track
+See [Perception](perception.md#sonar-types) for what each type is good for.
 
-3. **Deep Ocean:**
-   - Prioritize depth-rated systems with strong vendor support
+## Cameras and lights
 
-4. **Long-Range AUV:**
-   - Prioritize low power consumption and extended bottom-track range
+- Underwater cameras need in-water calibration (see [Perception](perception.md#underwater-vision)). Low-light sensors and good lighting matter more than resolution.
+- Strobes and LEDs consume much power; place them away from the camera axis to reduce backscatter.
+- Surface vehicles also use thermal cameras and pan-tilt-zoom cameras.
 
-5. **High-Accuracy Survey:**
-   - Prioritize models with published accuracy specs and calibration procedures
-
-**Operational Considerations:**
-- **Lead Time:** Vendor lead times can be long - confirm early in the procurement process
-- **Support:** Check vendor support and service options
-- **Integration:** WHOI drivers support Teledyne RDI; check vendor ROS support
-- **Spares:** Budget for protective caging and spares as needed
-
-#### Inertial Navigation Systems (INS) / IMU
-
-High-accuracy orientation and acceleration measurement.
-
-**Manufacturers:**
-- SBG Systems (Ellipse series)
-- VectorNav
-- Xsens
-- LORD MicroStrain
-- Advanced Navigation
-- EXAIL (PHINS INS range)
-- Sparton (M.2)
-- Kearfott (high-end)
-
-**Integration:**
-- Often combined with DVL for dead-reckoning
-- GPS integration for surface vehicles
-- AHRS (Attitude and Heading Reference System) capabilities
-
-#### INS/IMU Selection Guide
-
-**Comparison Matrix:**
-
-| Vendor | Model | Type | ROS Support | Spec Sheet |
-|--------|-------|------|-----------|------------|
-| **SBG Systems** | [Ellipse-N](https://www.sbg-systems.com/ins/ellipse-n/) | INS | ✓ [Official ROS 2](https://github.com/SBG-Systems/sbg_ros2_driver) | SBG Systems product page |
-| **SBG Systems** | [Ellipse-D](https://www.sbg-systems.com/ins/ellipse-d/) | INS | ✓ Official ROS 2 | SBG Systems product page |
-| **VectorNav** | [VN-100](https://www.vectornav.com/products/vn-100) | IMU/AHRS | Community | VectorNav product page |
-| **VectorNav** | [VN-200](https://www.vectornav.com/products/vn-200) | INS | Community | VectorNav product page |
-| **Xsens** | [MTi-3](https://www.xsens.com/sensor-modules/xsens-mti-3-ahrs) | AHRS | Community | Xsens product page |
-| **LORD MicroStrain** | [3DM-GX5-45](https://www.microstrain.com/inertial/3dm-gx5-45) | INS | Community | LORD MicroStrain product page |
-| **Advanced Navigation** | [Spatial FOG Dual](https://www.advancednavigation.com/inertial-navigation-systems/fog-gnss-ins/spatial-fog-dual/) | INS | Limited | Advanced Navigation product page |
-| **EXAIL** | [PHINS INS range](https://www.exail.com/product-range/inertial-navigation-for-subsea-operations) | INS | Limited | EXAIL product range |
-| **Sparton** | [M.2](https://www.spartonnavex.com/inertial-sensors-ahrs-m2) | AHRS/IMU | Limited | Sparton NavEx product page |
-| **Kearfott** | [Inertial Measurement Units](https://www.kearfott.com/products/guidance-navigation/inertial-measurement-units/) | High-grade INS | Custom | Kearfott product page |
-
-**Decision Criteria:**
-
-1. **Budget Student/Hobby Project:**
-   - IMU/AHRS-only units can be sufficient for basic attitude
-   - **Limitation:** Magnetometer-based heading degrades near metal and high-current systems
-
-2. **Research AUV (Pure Underwater):**
-   - Prioritize pressure-rated models with strong integration docs
-   - Pair with DVL for dead-reckoning accuracy
-
-3. **ASV (Surface Vehicle):**
-   - GNSS integration is essential for surface positioning
-
-4. **ROV (Tethered):**
-   - IMU-only configurations may be sufficient
-   - **Consideration:** Heading can be provided from topside systems if required
-
-5. **High-Accuracy Survey (Precision Required):**
-   - Dual-antenna GNSS + high-grade INS for precise heading
-
-**Critical Specifications to Consider:**
-
-- **Gyro Bias Stability:** Lower is better (affects long-term drift); compare vendor specs
-- **Depth Rating:** Essential for UUV applications
-- **GNSS Integration:** Dual-antenna GNSS improves heading accuracy
-- **Magnetic Interference:** Magnetometer-based heading unreliable near thrusters/motors
-
-**ROS Integration Notes:**
-- **SBG Systems:** Official [sbg_ros2_driver](https://github.com/SBG-Systems/sbg_ros2_driver) (check repo activity)
-- **Others:** Community drivers vary in quality and support
-- **Output:** Standard `sensor_msgs/Imu` for most packages
-
-### Acoustic Sensors
-
-#### Imaging Sonar
-
-Provides acoustic "images" of underwater environments.
-
-**Types:**
-- Mechanically scanned imaging sonar (Ping360, Tritech Micron)
-- Multi-beam imaging sonar (BlueView, Oculus)
-- Forward-Looking Sonar (FLS)
-
-**Use Cases:**
-- Obstacle avoidance
-- Target detection and classification
-- Navigation in turbid water
-- Underwater inspection
-
-#### Multibeam Sonar
-
-High-resolution bathymetric mapping.
-
-**Applications:**
-- Seafloor mapping
-- Hydrographic surveys
-- Habitat assessment
-
-#### Side-Scan Sonar
-
-Creates sonar images of large seabed areas.
-
-**Applications:**
-- Search and survey
-- Pipelines and cables
-- Archaeological surveys
-
-### Environmental Sensors
-
-#### CTD (Conductivity, Temperature, Depth)
-
-Fundamental oceanographic sensor.
-
-**Measurements:**
-- Salinity (via conductivity)
-- Temperature
-- Pressure/Depth
-
-**Use Cases:**
-- Water column profiling
-- Ocean monitoring
-- Model validation
-
-#### Pressure Sensors
-
-Depth measurement for underwater vehicles.
-
-**Types:**
-- Absolute pressure (depth)
-- Differential pressure (for flow measurement)
-- High-accuracy options for deep missions
-
-### Vision Systems
-
-#### Underwater Cameras
-
-**Challenges:**
-- Light attenuation
-- Color distortion
-- Turbidity
-- Biofouling
-
-**Solutions:**
-- Low-light cameras
-- Strobes/LED lighting
-- Stereo camera systems
-- Image processing for color correction
-
-#### Topside Cameras
-
-Surface vehicles use standard computer vision cameras plus:
-- Thermal cameras (for night operation, SAR)
-- Long-range optical cameras
-- Pan-tilt-zoom (PTZ) systems
-
-### Positioning Systems
-
-#### Acoustic Positioning
-
-**USBL (Ultra-Short Baseline):**
-- Surface transponder tracks underwater vehicle
-- Range and bearing measurement
-- Accuracy depends on baseline geometry, environment, and system calibration
-
-**LBL (Long Baseline):**
-- Network of seafloor transponders
-- High accuracy positioning
-- Requires deployment and calibration
-
-**SBL (Short Baseline):**
-- Array of transducers on surface platform
-- Medium accuracy
-
-#### Surface Positioning
-
-- **GNSS/GPS:** Standard for surface vehicles
-- **Differential GPS (DGPS):** Enhanced accuracy for surveying
-- **RTK GPS:** High-precision positioning (see receiver specs)
-
-## Propulsion & Actuation
+## Propulsion
 
 ### Thrusters
 
-**Types:**
-- Brushed DC thrusters (affordable, shorter lifespan)
-- Brushless thrusters (expensive, longer lifespan, higher efficiency)
-- Azimuth thrusters (vectorable)
+| Manufacturer | Examples | Notes |
+|---|---|---|
+| Blue Robotics | [T200](https://bluerobotics.com/store/thrusters/t200-thruster/), T500 | Brushless, flooded-motor design; need a brushless ESC. The [T100](https://bluerobotics.com/store/retired/t100-thruster/) is end of life |
+| Tecnadyne | Various models | Professional subsea thrusters |
+| VideoRay | Thrusters for VideoRay ROVs | Vehicle-specific |
+| Teledyne SeaBotix | BTD150, BTD300 | Teledyne ended SeaBotix vehicle production in 2025; check spare availability |
 
-**Manufacturers:**
-- Blue Robotics (T100, T200, T500)
-- Tecnadyne (professional-grade)
-- SeaBotix (professional-grade)
-- VideoRay (ROV-specific)
+**Choose by:**
 
-**Considerations:**
-- Thrust-to-weight ratio
-- Power consumption
-- Depth rating
-- Maintenance requirements
+- **Thrust curve** at your supply voltage, forward and reverse (they differ), and the current draw. You need the curve for allocation (see [Control](control.md#known-issues)).
+- **Depth rating** and pressure tolerance.
+- **Control interface**: PWM through an ESC (simple) or a digital bus with RPM and current feedback (better diagnostics).
+- **Spares and service**: on intermittent research use, a few low-cost thrusters plus spares can be better than fewer expensive ones; for continuous commercial use, prefer vendor-supported units with service intervals.
 
-#### Thruster Selection Guide
+| Vehicle | Typical configuration |
+|---|---|
+| Torpedo AUV | One stern propeller with fins, or a vectored thruster |
+| Small ROV (for example BlueROV2) | 6 thrusters (heavy configuration: 8) in a vectored layout |
+| Work-class ROV | Vectored horizontal plus vertical thrusters, with redundancy |
+| ASV | Twin thrusters (differential), or propeller and rudder; azimuth thrusters on larger vessels |
 
-**Comparison Matrix:**
+### Control surfaces and buoyancy
 
-| Manufacturer | Model | Type | Spec Sheet |
-|--------------|-------|------|------------|
-| **Blue Robotics** | [T100](https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t100-thruster-core/) | Brushed | Blue Robotics product page |
-| **Blue Robotics** | [T200](https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t200-thruster-r2-rp/) | Brushed | Blue Robotics product page |
-| **Blue Robotics** | [T500](https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t500-thruster/) | Brushed | Blue Robotics product page |
-| **SeaBotix** | BTD150 | Brushless | Contact vendor |
-| **SeaBotix** | BTD300 | Brushless | Contact vendor |
-| **Tecnadyne** | Model 150D | Brushless | Contact vendor |
-| **Tecnadyne** | Model 310 | Brushless | Contact vendor |
-| **VideoRay** | M3 | Brushless | Contact vendor |
+Torpedo AUVs and gliders use rudders and elevators. Gliders and some AUVs use buoyancy engines (pumps or pistons) for vertical motion.
 
-**Decision Criteria:**
+## Power
 
-1. **Budget Project / Student ROV:**
-   - Consider entry-level brushed thrusters and plan for spares
+- **Lithium-ion** is the norm. Use a battery management system (BMS), and follow transport and storage rules for lithium batteries.
+- **Pressure-tolerant** battery packs avoid large housings on deep vehicles.
+- Thrust falls as battery voltage drops; plan for it in control and in [power budgets](operations.md#power-budgets).
+- Surface vehicles can add solar panels or fuel generators.
 
-2. **Research AUV (Medium Budget):**
-   - Balance thrust margin, integration effort, and spares strategy
+## Housings, connectors, and tethers
 
-3. **Professional ROV (Reliability Critical):**
-   - Prefer brushless thrusters with vendor support and documented maintenance intervals
-
-4. **Deep Ocean:**
-   - Confirm depth rating and pressure tolerance with the vendor
-
-5. **Long-Duration AUV:**
-   - Minimize continuous thruster use; consider control surfaces or glider designs
-
-**Thruster Count by Vehicle Type:**
-
-| Vehicle Type | Typical Configuration | Notes |
-|--------------|----------------------|-------|
-| Torpedo AUV | Single stern thruster | Surge-focused designs |
-| Simple ROV | Differential drive | Multiple thrusters |
-| BlueROV2 | Vectored | Full-DOF capable configuration |
-| Heavy ROV | Vectored + verticals | Full-DOF with redundancy |
-| ASV | Twin differential | Surge/yaw focused |
-
-**Design Trade-Offs:**
-
-**Option A: More Low-Cost Thrusters**
-- Higher redundancy
-- Easier to swap spares
-- Lower initial cost
-
-**Option B: Fewer High-End Thrusters**
-- Lower maintenance overhead
-- Higher reliability
-- Vendor-supported service intervals
-
-**Recommendation by Use Case:**
-- **Education/Research (intermittent use):** Entry-level thrusters + spares
-- **Commercial/Survey (continuous use):** Brushless, vendor-supported thrusters
-- **Deep Ocean:** Depth-rated professional thrusters
-- **DIY/Hobby:** Entry-level thrusters
-
-**Integration Considerations:**
-- **ESC (Electronic Speed Controller):** Some vendors include ESCs, others require separate procurement
-- **Control Interface:** PWM (simple) vs CAN bus (advanced)
-- **ROS Integration:** Blue Robotics BasicESC has community ROS support
-- **Mounting:** Consider 3D-printed mounts for Blue Robotics, professional brackets for others
-
-### Control Surfaces
-
-For torpedo-shaped AUVs and gliders:
-- Rudders
-- Elevators
-- Ailerons (for some designs)
-
-### Buoyancy Control
-
-For gliders and some AUVs:
-- Piston-based buoyancy engines
-- Ballast systems
-
-## Power Systems
-
-### Batteries
-
-**Common Chemistries:**
-- Lithium-ion: High energy density, common for most vehicles
-- Lithium polymer: Flexible form factor
-- Alkaline: Simple, safe, lower performance
-
-**Underwater Considerations:**
-- Pressure-compensated housings
-- Thermal management
-- Battery Management Systems (BMS)
-
-### Energy Harvesting
-
-- Solar panels (for surface vehicles)
-- Wave energy (experimental)
-- Thermal gradients (for gliders)
-
-## Waterproof Enclosures
-
-Essential for protecting electronics underwater.
-
-**Types:**
-- Acrylic tubes (transparent, good for cameras)
-- Aluminum enclosures (strong, opaque)
-- Subsea connectors (SubConn, Blue Robotics penetrators)
-- Pressure compensation systems
-
-**Design Considerations:**
-- Depth rating
-- Corrosion resistance
-- Weight (buoyancy management)
-- Accessibility for maintenance
-
-## Tether Systems
-
-For ROVs and some test configurations:
-- Neutrally buoyant tethers
-- Power and communication cables
-- Tether management systems
-- Fiber optic for high-bandwidth communication
+- **Housings**: acrylic or polycarbonate tubes for shallow vehicles and cameras; aluminum, titanium, or glass for deeper ones. Check the depth rating with margin.
+- **Connectors and penetrators**: MacArtney (SubConn), Teledyne Impulse, Seacon, and Blue Robotics penetrators. Connectors are a common failure point.
+- **Tethers**: neutrally buoyant tethers for small ROVs; fiber for high bandwidth over long lengths. Tether drag dominates in a current.
 
 ## Manipulators
 
-Underwater robotic arms for intervention tasks.
+| Manufacturer | Examples |
+|---|---|
+| Reach Robotics (formerly Blueprint Lab) | Reach Alpha, Reach Bravo |
+| Schilling Robotics (TechnipFMC) | Work-class manipulators |
+| Kraft TeleRobotics | Hydraulic manipulators |
 
-**Specifications:**
-- Degrees of freedom (varies by model)
-- Reach
-- Payload capacity
-- End effector options (grippers, cutters, sensors)
+For ROS: MoveIt 2 for planning, and whole-body or impedance control for the vehicle and arm together.
 
-**Manufacturers:**
-- Schilling Robotics
-- Reach Robotics
-- Blueprint Lab (open-source designs)
+## Saving money, and where not to
 
-## Budget Planning
+**Save on:** used instruments from reputable sources, 3D-printed mounts and fairings, simulation before hardware, and testing each sensor alone before integration.
 
-Budget and schedule vary widely by vehicle class, payload, and operating depth. Use vendor quotes and recent project bills of materials for any planning numbers, and confirm lead times with suppliers before committing to a mission schedule.
+**Do not save on:** pressure housings and seals, connectors, the INS (it sets your navigation accuracy), battery safety, and an engineering review of critical systems.
 
----
+## Component suppliers
 
-## Component Suppliers
-
-### Marine Electronics
-
-- **Blue Robotics** - UUV components and accessories
-- **Teledyne Marine** - Marine sensors and instrumentation
-- **Sonardyne** - Acoustic positioning and navigation systems
-- **Nortek** - ADCPs and DVLs
-
-### Subsea Connectors
-
-- **MacArtney (SubConn)** - Subsea connectors
-- **Seacon** - Professional connectors, wide variety
-- **Blue Robotics** - Penetrators (see vendor specs)
-
-### Waterproof Housings
-
-- **Blue Robotics** - Acrylic tubes, aluminum end caps (see vendor specs)
-- **Sexton Corporation** - Custom professional housings
-- **Custom fabrication** - Local machine shops for aluminum housings
-
-### Where to Save Money
-
-1. **Buy used DVLs** - Check vendor and reseller listings for availability
-2. **3D print non-critical parts** - Mounts, fairings, cable management
-3. **Community resources** - Use proven designs and reference builds
-4. **Simulation first** - Test extensively in Gazebo before hardware
-5. **Incremental integration** - Test each sensor individually before full system
-
-### Where NOT to Compromise
-
-1. **Pressure housings** - Leaks can destroy electronics
-2. **Connectors** - Connectors are a common failure point
-3. **IMU quality** - IMU quality affects navigation accuracy
-4. **Battery safety** - Proper BMS prevents fires/damage
-5. **Professional help** - Budget for engineering review on critical systems
-
----
-
-## Sources
-
-**DVL Specifications:**
-- [Nortek DVL1000 Datasheet](https://www.nortekgroup.com/export/pdf/DVL1000%20-%204000%20m.pdf)
-- [Nortek DVL500 Product Page](https://www.nortekgroup.com/products/dvl500-300-m)
-- [Teledyne Marine Tasman DVL](https://www.teledynemarine.com/en-us/products/SiteAssets/RD%20Instruments/Tasman_DVL.pdf)
-- [Water Linked DVL A50](https://waterlinked.com/dvl/)
-
-**Thruster Specifications:**
-- [Blue Robotics T100 Thruster](https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t100-thruster-core/)
-- [Blue Robotics T200 Thruster](https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t200-thruster-r2-rp/)
-- [Blue Robotics T500 Thruster](https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t500-thruster/)
-
-**INS/IMU Specifications:**
-- [SBG Systems Ellipse-N](https://www.sbg-systems.com/ins/ellipse-n/)
-- [SBG Systems Ellipse-D](https://www.sbg-systems.com/ins/ellipse-d/)
-- [SBG ROS 2 Driver](https://github.com/SBG-Systems/sbg_ros2_driver)
-- [VectorNav VN-100](https://www.vectornav.com/products/vn-100)
-- [VectorNav VN-200](https://www.vectornav.com/products/vn-200)
-- [Xsens MTi-3](https://www.xsens.com/sensor-modules/xsens-mti-3-ahrs)
-- [LORD MicroStrain 3DM-GX5-45](https://www.microstrain.com/inertial/3dm-gx5-45)
-- [Advanced Navigation Spatial FOG Dual](https://www.advancednavigation.com/inertial-navigation-systems/fog-gnss-ins/spatial-fog-dual/)
-- [EXAIL PHINS INS range](https://www.exail.com/product-range/inertial-navigation-for-subsea-operations)
-- [Sparton M.2](https://www.spartonnavex.com/inertial-sensors-ahrs-m2)
-- [Kearfott Inertial Measurement Units](https://www.kearfott.com/products/guidance-navigation/inertial-measurement-units/)
-
-**Note:** Prices and specifications subject to change. Contact vendors directly for current pricing and detailed specifications. Lead times can vary significantly based on market conditions.
-
----
-
-*This page was last updated: {{ git_revision_date_localized }}*
-
---8<-- "docs/goatcounter.html"
+| Area | Examples |
+|---|---|
+| Small-vehicle components | Blue Robotics |
+| Marine sensors | Teledyne Marine, Nortek, Sonardyne, Water Linked, Kongsberg |
+| Connectors | MacArtney (SubConn), Seacon, Teledyne Impulse |
+| Housings | Blue Robotics, custom machine shops |

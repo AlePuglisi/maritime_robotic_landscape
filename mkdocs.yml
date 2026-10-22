@@ -1,34 +1,173 @@
 site_name: Maritime Robotics Landscape
+site_description: Community reference for ROS-based maritime robotics software, simulation, hardware, and field operations.
 site_url: https://ros-maritime.oceansoft.org/
-theme: readthedocs
+site_author: ROS Maritime Community Working Group
+repo_url: https://github.com/ros-maritime/maritime_robotic_landscape
+repo_name: ros-maritime/maritime_robotic_landscape
+edit_uri: edit/main/docs/
+copyright: >-
+  Content by the ROS Maritime Community Working Group, licensed
+  <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+  Privacy-respecting analytics by GoatCounter.
 
-copyright: 'Information assembled by the ROS Maritime Robotics Working Group. Privacy-respecting analytics with GoatCounter.'
+theme:
+  name: material
+  custom_dir: overrides
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+  font:
+    text: Inter
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to system preference
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.tracking
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - content.action.edit
 
 nav:
-- Home: 'index.md'
-- Getting Started: 'getting_started.md'
-- FAQ: 'faq.md'
-- Glossary: 'glossary.md'
-- Vehicle Types: 'vehicle_types.md'
-- Autonomy Stacks: 'autonomy_stacks.md'
-- Simulation: 'simulation.md'
-- Hardware: 'hardware.md'
-- Software: 'software.md'
-- Drivers: 'drivers.md'
-- Datasets: 'datasets.md'
-- Education & Tutorials: 'education_and_tutorials.md'
-- Events: 'events.md'
-- Expert Reference: 'expert_reference.md'
-- Operations: 'operations.md'
-- Integration Examples: 'integration_examples.md'
+  - Home: index.md
+  - Start here:
+      - Getting started: getting_started.md
+      - Learning path and tutorials: education_and_tutorials.md
+      - FAQ: faq.md
+      - Glossary: glossary.md
+  - Software:
+      - software.md
+      - Package catalog: catalog.md
+      - Autonomy frameworks: autonomy_stacks.md
+      - Simulation: simulation.md
+      - Drivers and interfaces: drivers.md
+      - Frames and conventions: conventions.md
+      - Control and allocation: control.md
+      - Localization and navigation: navigation.md
+      - Perception and mapping: perception.md
+      - Communication: communication.md
+      - Tools and workflows: tools.md
+      - Integration examples: integration_examples.md
+      - Quick reference: expert_reference.md
+  - Hardware:
+      - Vehicle types: vehicle_types.md
+      - Sensors and components: hardware.md
+  - Field operations: operations.md
+  - Datasets: datasets.md
+  - Community:
+      - community.md
+      - Events and competitions: events.md
+      - Contributing: contributing.md
+
+hooks:
+  - hooks/catalog.py
+
+extra_css:
+  - stylesheets/extra.css
+  - https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css
+
+extra_javascript:
+  - javascripts/catalog.js
+  - javascripts/katex.js
+  - https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js
+  - https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js
+
+extra:
+  analytics:
+    provider: custom
+  social:
+    - icon: fontawesome/brands/discourse
+      link: https://discourse.openrobotics.org/c/community-groups/marine-robotics/36
+      name: ROS Discourse, Marine Robotics
+    - icon: simple/zulip
+      link: https://openrobotics.zulipchat.com/#narrow/channel/526058-Marine-Robotics
+      name: Zulip, Marine Robotics channel
+    - icon: fontawesome/brands/github
+      link: https://github.com/ros-maritime
+      name: ros-maritime on GitHub
 
 markdown_extensions:
-- pymdownx.snippets:
-    check_paths: true
-- admonition
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets:
+      check_paths: true
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 plugins:
-    - search
-    - git-revision-date-localized:
-        fallback_to_build_date: true
-    - include-markdown
+  - search
+  - git-revision-date-localized:
+      type: date
+      fallback_to_build_date: true
+
+watch:
+  - data
+  - hooks
+  - includes
+  - overrides
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn

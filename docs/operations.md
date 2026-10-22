@@ -1,6 +1,21 @@
-# Operations and Deployment
+---
+title: Field operations
+description: Pre-deployment checklists, power budgets, environmental limits, failure modes, and maintenance for marine robot field work.
+---
 
-Practical guidance for deploying marine robots based on real-world experience. This page covers pre-deployment checklists, power budgets, failure modes, environmental limits, and operational procedures.
+# Field operations
+
+Practical guidance for deploying marine robots, from community field experience: checklists, power budgets, failure modes, environmental limits, and maintenance. Adapt every list to your vehicle and to the manufacturers' instructions.
+
+```mermaid
+flowchart LR
+  P["Plan<br/>objectives, permits,<br/>power budget, abort criteria"] --> R["Prepare<br/>day before:<br/>vehicle, spares, briefing"]
+  R --> S["Pre-splash<br/>power-up sequence,<br/>function tests"]
+  S --> D["Deploy and monitor<br/>launch, mission,<br/>status checks"]
+  D --> RC["Recover<br/>locate, secure,<br/>power down"]
+  RC --> PO["Post-mission<br/>data backup, rinse,<br/>inspect, lessons"]
+  PO -.-> P
+```
 
 !!! warning "Safety First"
 
@@ -48,10 +63,10 @@ Practical guidance for deploying marine robots based on real-world experience. T
 
 **System Power-Up Sequence:**
 
-1. **DVL warm-up** (per manufacturer guidance)
-   - Power on DVL first
-   - Allow transducers to stabilize temperature
-   - Verify bottom-lock acquisition (on deck/dock if possible)
+1. **DVL check** (per manufacturer guidance)
+   - Many DVLs must not ping in air for more than a short time, because this can damage the transducers. Check the manual, and keep pinging disabled on deck unless the manufacturer allows it
+   - Allow the transducers to reach water temperature if the manual recommends it
+   - Verify bottom lock after the vehicle is in the water
 
 2. **IMU calibration**
    - Power on IMU
@@ -116,7 +131,7 @@ Practical guidance for deploying marine robots based on real-world experience. T
 ### Post-Deployment
 
 **Immediate (post-recovery):**
-- [ ] Download data IMMEDIATELY (don't wait - corruption risk increases with time)
+- [ ] Download data promptly, before any other work on the vehicle
 - [ ] Backup data to multiple locations
 - [ ] Rinse vehicle with fresh water (if salt water deployment)
 - [ ] Remove batteries and dry compartments
@@ -454,7 +469,7 @@ Define go/no-go criteria based on vehicle design, operator experience, and local
 
 1. **Pre-deployment checklist** (see above)
 2. **Team brief** (roles, communication protocol, abort signals)
-3. **Power-up sequence** (DVL first, thrusters last)
+3. **Power-up sequence** (sensors first, thrusters armed last)
 4. **Function tests** (all sensors, thrusters, modem)
 5. **Launch** (controlled, documented)
 6. **Monitor** (periodic status checks)
@@ -473,7 +488,7 @@ Define go/no-go criteria based on vehicle design, operator experience, and local
 
 !!! tip "Share Your Experience"
 
-    Have operational wisdom to share? Add to this page via pull request or post on [ROS Discourse](https://discourse.ros.org/c/maritime/36).
+    Have operational experience to share? Add it to this page with a pull request, or post it on [ROS Discourse](https://discourse.openrobotics.org/c/community-groups/marine-robotics/36).
 
 **From the community:**
 
@@ -490,7 +505,7 @@ Define go/no-go criteria based on vehicle design, operator experience, and local
 ### "DVL needs warm-up"
 *Contributor: Research engineer*
 
-"DVL transducers can drift during warm-up. We power our DVL early and wait for readings to stabilize before launch."
+"Once the vehicle is in the water, we power the DVL early and wait for readings to stabilize before we start the mission. We never let it ping on deck."
 
 ### "Fresh water rinse saves equipment"
 *Contributor: Marine technician*
@@ -540,9 +555,3 @@ Define go/no-go criteria based on vehicle design, operator experience, and local
 ---
 
 *For deployment-specific guidance, see vehicle manufacturer's documentation. This page provides general best practices from community experience.*
-
----
-
-*This page was last updated: {{ git_revision_date_localized }}*
-
---8<-- "docs/goatcounter.html"
