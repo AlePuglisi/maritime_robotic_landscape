@@ -11,7 +11,7 @@ repos:
   https://git.whoi.edu/acomms/ros_acomms: {}
   https://github.com/ArduPilot/ardupilot:
     branch: master
-    last_commit: '2026-10-22'
+    last_commit: '2026-10-21'
   https://github.com/ArduPilot/ardupilot_gazebo:
     branch: main
     last_commit: '2026-04-03'
@@ -50,10 +50,10 @@ repos:
     last_commit: '2026-09-15'
   https://github.com/GobySoft/goby3:
     branch: '3.0'
-    last_commit: '2026-09-15'
+    last_commit: '2026-09-16'
   https://github.com/IOES-Lab/POSIM:
     branch: main
-    last_commit: '2026-10-22'
+    last_commit: '2026-10-21'
   https://github.com/KumarRobotics/ublox:
     branch: ros2
     last_commit: '2025-09-26'
@@ -74,13 +74,13 @@ repos:
     last_commit: '2026-10-02'
   https://github.com/PX4/PX4-Autopilot:
     branch: main
-    last_commit: '2026-10-22'
+    last_commit: '2026-10-21'
   https://github.com/RobotWebTools/rosbridge_suite:
     branch: ros2
     last_commit: '2026-10-05'
   https://github.com/Robotic-Decision-Making-Lab/ardusub_driver:
     branch: main
-    last_commit: '2026-03-29'
+    last_commit: '2026-03-30'
   https://github.com/Robotic-Decision-Making-Lab/auv_controllers:
     branch: main
     last_commit: '2026-08-15'
@@ -140,16 +140,16 @@ repos:
     last_commit: '2026-07-16'
   https://github.com/dawonn/vectornav:
     branch: ros2
-    last_commit: '2025-03-06'
+    last_commit: '2025-03-07'
   https://github.com/dwcaress/MB-System:
     branch: master
-    last_commit: '2026-10-19'
+    last_commit: '2026-10-20'
   https://github.com/facontidavide/PlotJuggler:
     branch: main-4.x
     last_commit: '2026-10-15'
   https://github.com/foxglove/mcap:
     branch: main
-    last_commit: '2026-10-21'
+    last_commit: '2026-10-22'
   https://github.com/foxglove/ros-foxglove-bridge:
     branch: main
     last_commit: '2025-10-08'
@@ -158,7 +158,7 @@ repos:
     last_commit: '2026-10-21'
   https://github.com/gazebosim/ros_gz:
     branch: ros2
-    last_commit: '2026-10-19'
+    last_commit: '2026-10-20'
   https://github.com/geographiclib/geographiclib:
     branch: main
     last_commit: '2025-11-14'
@@ -188,10 +188,10 @@ repos:
     last_commit: '2026-10-21'
   https://github.com/mavlink/qgroundcontrol:
     branch: master
-    last_commit: '2026-10-21'
+    last_commit: '2026-10-22'
   https://github.com/moos-ivp/moos-ivp:
     branch: main
-    last_commit: '2026-10-15'
+    last_commit: '2026-10-16'
   https://github.com/nortekgroup/nucleus_driver:
     branch: main
     last_commit: '2026-10-12'
@@ -243,7 +243,7 @@ repos:
     last_commit: '2026-03-02'
   https://github.com/ros-drivers/usb_cam:
     branch: main
-    last_commit: '2026-02-25'
+    last_commit: '2026-02-26'
   https://github.com/ros-geographic-info/geographic_info:
     branch: master
     last_commit: '2026-08-17'
@@ -270,7 +270,7 @@ repos:
     last_commit: '2026-10-08'
   https://github.com/ros2/rosbag2:
     branch: rolling
-    last_commit: '2026-10-21'
+    last_commit: '2026-10-22'
   https://github.com/ros2/rviz:
     branch: rolling
     last_commit: '2026-10-12'
@@ -306,7 +306,7 @@ repos:
     last_commit: '2026-09-11'
   https://github.com/uri-ocean-robotics/mvp_mission:
     branch: jazzy-devel
-    last_commit: '2026-09-11'
+    last_commit: '2026-09-12'
   https://github.com/uuvsimulator/uuv_simulator:
     branch: master
     last_commit: '2020-06-15'
@@ -320,7 +320,7 @@ repos:
     last_commit: '2026-08-20'
   https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client:
     branch: main
-    last_commit: '2026-02-03'
+    last_commit: '2026-02-02'
   https://gitlab.com/ternaris/rosbags:
     branch: master
     last_commit: '2026-10-20'
