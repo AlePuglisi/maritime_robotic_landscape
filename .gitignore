@@ -2,5 +2,7 @@ site/
 *.pyc
 __pycache__/
 .DS_Store
+.venv/
 DEPLOYMENT_CHECKLIST.md
 AUTO_UPDATE_TESTING.md
+ros-maritime.oceansoft.org

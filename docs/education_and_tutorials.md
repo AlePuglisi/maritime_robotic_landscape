@@ -1,338 +1,175 @@
-# Education and Tutorials
+---
+title: Learning path and tutorials
+description: A structured learning path for maritime robotics with ROS 2, hands-on tutorials, courses, books, and other learning resources.
+---
 
-Resources for learning maritime robotics with ROS, from beginner tutorials to advanced topics.
+# Learning path and tutorials
 
-!!! note "Absolute Beginner?"
+!!! note "Before you start"
 
-    **Never used ROS before?** Start with the [Getting Started Guide](getting_started.md) for a complete beginner introduction. The tutorials on this page assume you have basic familiarity with ROS concepts.
+    These tutorials assume basic ROS 2 knowledge: nodes, topics, parameters, and launch files. If you are new to ROS, do the official [ROS 2 Jazzy tutorials](https://docs.ros.org/en/jazzy/Tutorials.html) first, and read [Getting started](getting_started.md).
 
-    **Need to understand the terms?** Check the [Glossary](glossary.md) for explanations of acronyms and concepts.
+## Learning path
 
-## Getting Started with Maritime Robotics
+```mermaid
+flowchart TD
+  A["1 · ROS 2 basics<br/>topics, TF, launch, bags"] --> B["2 · Marine concepts<br/>vehicle types, 6-DOF motion,<br/>ENU vs NED, sensors"]
+  B --> C["3 · Simulation<br/>VRX surface vehicle;<br/>BlueROV2 or POSIM underwater"]
+  C --> D["4 · Control<br/>PID on heading and speed,<br/>thrust allocation, LOS guidance"]
+  D --> E["5 · State estimation<br/>robot_localization with<br/>DVL, IMU, depth, GNSS"]
+  E --> F["6 · Autonomy<br/>missions, behaviors, failsafes"]
+  F --> G["7 · Hardware and field work<br/>drivers, tank tests, sea trials"]
+  B -.-> R1["Read: Conventions"]
+  D -.-> R2["Read: Control"]
+  E -.-> R3["Read: Localization"]
+  G -.-> R4["Read: Field operations"]
+  click R1 "../conventions/"
+  click R2 "../control/"
+  click R3 "../navigation/"
+  click R4 "../operations/"
+```
 
-### Introduction to Marine Vehicles
+Concepts that differ from land robotics, and where they are explained:
 
-**Prerequisites:**
-- **Basic ROS knowledge** - Understand topics, nodes, and launch files
-- **Basic Linux/command-line** - Can navigate directories, edit files
-- **Python or C++** - Know basic programming concepts
-
-**New to ROS?** Start with:
-- [ROS 2 Tutorials](https://docs.ros.org/en/rolling/Tutorials.html) - Official beginner tutorials
-- [ROS 2 Basics](https://www.ros.org/) - Understand what ROS is
-- [Getting Started Guide](getting_started.md) - Maritime robotics introduction
-
-**Maritime-Specific Concepts:**
-1. **Vehicle Dynamics:** Understanding marine vehicle motion (6-DOF)
-2. **Coordinate Frames:** NED (North-East-Down), ENU (East-North-Up), body frame
-3. **Environmental Forces:** Currents, waves, buoyancy, drag
-4. **Sensor Limitations:** GPS unavailable underwater, acoustic vs. RF communication
-
-### Recommended Learning Path
-
-1. **Simulation First:** Start with simulators (VRX, DAVE) before real hardware
-2. **Simple Vehicles:** Begin with surface vehicles (easier to test and debug)
-3. **Sensor Integration:** Add sensors incrementally (IMU → GPS → Sonar)
-4. **Control Basics:** Understand PID control before advanced techniques
-5. **Real Hardware:** Progress to physical platforms after simulation success
+1. **Vehicle dynamics** in 6 DOF, with added mass, damping, and buoyancy: [Control](control.md), and Fossen's handbook below.
+2. **Coordinate frames**: ENU and FLU in ROS, NED and FRD in marine instruments: [Conventions](conventions.md).
+3. **Environmental forces**: currents, waves, and wind: [Simulation](simulation.md).
+4. **Sensor limits**: no GNSS underwater, slow acoustic links, short camera range: [Localization](navigation.md), [Communication](communication.md), [Perception](perception.md).
 
 ## Tutorials
 
-### Tutorial 1: Setting Up VRX Simulation
+### Tutorial 1: Drive a boat in VRX
 
-**Goal:** Get the Virtual RobotX simulation running with a basic surface vehicle.
+**Goal**: run the Virtual RobotX simulation and drive the WAM-V with thrust commands.
 
-**Steps:**
+1. **Install** ROS 2 Jazzy and Gazebo Harmonic, then build VRX by following the [VRX installation tutorial](https://github.com/osrf/vrx/wiki). The default `jazzy` branch targets this combination.
+2. **Launch** a world:
 
-1. **Follow the VRX README:** Install dependencies, build the workspace, and launch a sample world using the current VRX instructions.
-2. **Confirm the vehicle spawns:** Ensure you see the model in the simulator before proceeding.
-3. **Publish simple commands:** Use `ros2 topic pub` to command the thrusters (see the VRX docs for topic names and message types).
+    ```bash
+    ros2 launch vrx_gz competition.launch.py world:=sydney_regatta
+    ```
 
-**Next Steps:**
-- Explore sensor topics with `ros2 topic list`
-- Write a simple controller node
-- Try competition tasks
+3. **Look around** in a second terminal:
 
-**Resources:**
-- [VRX Wiki](https://github.com/osrf/vrx/wiki)
-- [VRX Tutorials](https://github.com/osrf/vrx/wiki/tutorials)
+    ```bash
+    ros2 topic list | grep wamv
+    ros2 topic info /wamv/thrusters/left/thrust    # std_msgs/msg/Float64
+    ```
 
-### Tutorial 2: Understanding Thrust Allocation
+4. **Drive forward**, then turn by commanding the two thrusters differently:
 
-**Goal:** Learn how multi-thruster vehicles distribute forces.
+    ```bash
+    ros2 topic pub -r 10 /wamv/thrusters/left/thrust std_msgs/msg/Float64 "{data: 200.0}" &
+    ros2 topic pub -r 10 /wamv/thrusters/right/thrust std_msgs/msg/Float64 "{data: 200.0}"
+    ```
 
-**Concept:**
+    Stop both commands with ++ctrl+c++ (and `kill %1` for the background one). Change one value to make the boat turn.
 
-A vehicle with multiple thrusters needs to determine how to command each thruster to achieve desired forces and torques. This is the thrust allocation problem.
+**Next steps**: write a Python node that reads the boat's pose and controls heading with a PID loop; then try the VRX tasks (station keeping, wayfinding). The [VRX wiki](https://github.com/osrf/vrx/wiki) has tutorials for each.
 
-**Example - 4-Thruster Configuration:**
+### Tutorial 2: Thrust allocation by hand
 
-Consider a 4-thruster configuration with horizontal thrusters:
+**Goal**: understand how a multi-thruster vehicle turns a desired force and moment into thruster commands.
 
-```
-     T1    T2
-     ↓      ↓
-    ┌────────┐
-    │  ROV   │
-    └────────┘
-     ↑      ↑
-     T3    T4
-```
+Work through the [tested allocation example](control.md#tested-example) on the Control page. Then:
 
-**Allocation Matrix T:**
+1. Change the thruster angles and see how the condition number of \( T \) changes.
+2. Increase the demand until a thruster saturates, and compare clipping with uniform scaling.
+3. Remove one thruster (delete its column) and check which wrenches are still possible. This is how allocation handles a thruster failure.
 
-Each thruster contributes to surge (X), sway (Y), and yaw (N). The allocation matrix relates thruster forces to vehicle forces:
+### Tutorial 3: Fuse a DVL with robot_localization
 
-```
-[X]   [T_matrix] [F1]
-[Y] = [  ....  ] [F2]
-[N]   [  ....  ] [F3]
-                 [F4]
-```
+**Goal**: dead-reckon an underwater vehicle from DVL velocity, IMU attitude, and depth.
 
-**Implementation:**
+1. **Get data**: use a simulator with a DVL (Gazebo's DopplerVelocityLog system, POSIM, or Stonefish), or a real DVL with its ROS 2 driver (for example [waterlinked_dvl](https://github.com/waterlinked/waterlinked_dvl)).
+2. **Check the messages**: robot_localization takes DVL velocity as `geometry_msgs/TwistWithCovarianceStamped` in the DVL frame, with a non-zero covariance. If the driver publishes only `marine_acoustic_msgs/Dvl`, add a small conversion node.
+3. **Check the transforms**: `base_link → dvl_link`, `base_link → imu_link`, and `base_link → pressure_link` must exist (from the URDF).
+4. **Configure the EKF** with the [local EKF configuration](navigation.md#robot_localization-configurations): DVL as `twist0`, IMU as `imu0`, depth as `pose0` with only z.
+5. **Verify**: drive a square in simulation and compare `/odometry/local` with the simulator's ground truth in PlotJuggler. Then turn off the DVL input and watch the drift grow.
 
-1. **Define Configuration in URDF** (see thrust allocation packages)
-2. **Use an existing package** (MVP-Control, thruster_manager)
-3. **Or implement your own:**
+### Tutorial 4: Turn a USBL fix into a position
 
-```python
-import numpy as np
+**Goal**: understand the geometry of an ultra-short baseline fix.
 
-# Pseudo-inverse solution
-T = np.array([[1, 1, 1, 1],      # Surge
-              [0, 0, 0, 0],       # Sway (simplified)
-              [0.1, -0.1, -0.1, 0.1]])  # Yaw (moment arms)
+A USBL transceiver measures the **slant range** \( r \) (from travel time and sound speed) and the direction to the vehicle as an **azimuth** \( \beta \) and a **depression angle** \( \gamma \) below horizontal, in the transceiver's frame. In an ENU-aligned transceiver frame (azimuth counter-clockwise from east, z up), the vehicle position is
 
-T_inv = np.linalg.pinv(T)  # Pseudo-inverse
+\[
+x = r\cos\gamma\cos\beta, \qquad y = r\cos\gamma\sin\beta, \qquad z = -r\sin\gamma
+\]
 
-desired_forces = np.array([10, 0, 1])  # Example values
-thruster_forces = T_inv @ desired_forces
-```
+A real system must also add the transceiver's own position and attitude (from the ship's GNSS and INS), and correct for the sound speed profile. Vendor USBL systems do all of this and output a georeferenced position; this example shows only the core geometry.
 
-**Gotchas:**
-- Thruster saturation
-- Dead zones
-- Optimal vs. feasible solutions
+```python title="usbl_to_point.py"
+import math
 
-### Tutorial 3: Integrating a DVL with ROS 2
+import rclpy
+from geometry_msgs.msg import PointStamped
+from rclpy.node import Node
 
-**Goal:** Set up a Doppler Velocity Log for underwater navigation.
 
-**Hardware:** Various DVL manufacturers (Teledyne RDI, Nortek, LinkQuest)
+def usbl_to_enu(slant_range, azimuth, depression):
+    """Range (m) and angles (rad) in an ENU-aligned transceiver frame -> x, y, z (m)."""
+    horizontal = slant_range * math.cos(depression)
+    return (horizontal * math.cos(azimuth),
+            horizontal * math.sin(azimuth),
+            -slant_range * math.sin(depression))
 
-⚠️ **Note:** The Water Linked DVL A50 ROS driver repository ([waterlinked/dvl-a50-ros-driver](https://github.com/waterlinked/dvl-a50-ros-driver)) is archived (last push 2024-02-26). For current DVL driver options, see the [WHOI Deep Submergence Lab drivers](drivers.md#whoi-deep-submergence-lab-drivers) which support Teledyne RDI DVLs, or check the [Drivers page](drivers.md#dvl-doppler-velocity-log) for other options.
 
-**Steps:**
-
-1. **Install Driver:**
-   - Clone the appropriate DVL driver for your hardware.
-   - For WHOI drivers, see the WHOI Bitbucket workspace (repo access may require approval): https://bitbucket.org/whoidsl/workspace/repositories/
-
-2. **Configure Connection:**
-   Edit the config file for your serial port, baud rate, and frame ID per the device manual.
-
-3. **Launch the DVL node:**
-   Use your driver package's launch file.
-
-4. **Verify Data:**
-   Use `ros2 topic echo` to confirm the driver publishes velocity and altitude.
-
-5. **Integrate with robot_localization:**
-
-   ```yaml
-   # ekf_config.yaml
-   ekf_filter_node:
-     ros__parameters:
-       odom0: /dvl/velocity
-       odom0_config: [false, false, false,  # x, y, z position
-                      false, false, false,  # roll, pitch, yaw
-                      true,  true,  true,   # x_dot, y_dot, z_dot
-                      false, false, false,  # roll_dot, pitch_dot, yaw_dot
-                      false, false, false]  # x_ddot, y_ddot, z_ddot
-   ```
-
-**Next Steps:**
-- Add IMU for full state estimation
-- Tune EKF parameters
-- Test in water tank or simulation
-
-### Tutorial 4: Basic Acoustic Localization
-
-**Goal:** Understand USBL positioning for underwater vehicles.
-
-**Concept:**
-
-USBL (Ultra-Short Baseline) uses a surface transceiver to track an underwater beacon:
-- Measures range (time-of-flight)
-- Measures bearing (phase difference on transducer array)
-- Computes 3D position relative to surface unit
-
-**Simulation Setup:**
-
-1. Use a simulator with acoustic positioning (DAVE, custom Gazebo)
-2. Configure USBL beacon on vehicle
-3. Configure surface transceiver
-
-**ROS Integration:**
-
-```python
-# Simplified USBL position update
-class USBLLocalizer:
+class UsblDemo(Node):
     def __init__(self):
-        self.sub = self.create_subscription(
-            USBLFix, '/usbl/fix', self.usbl_callback, 10)
+        super().__init__("usbl_demo")
+        self.pub = self.create_publisher(PointStamped, "usbl/position", 10)
+        self.timer = self.create_timer(1.0, self.publish_fix)
 
-    def usbl_callback(self, msg):
-        # msg contains: range, bearing, elevation
-        # Convert to Cartesian coordinates
-        x = msg.range * cos(msg.elevation) * cos(msg.bearing)
-        y = msg.range * cos(msg.elevation) * sin(msg.bearing)
-        z = msg.range * sin(msg.elevation)
+    def publish_fix(self):
+        # Example fix: 120 m slant range, 30 degrees azimuth, 40 degrees below horizontal
+        x, y, z = usbl_to_enu(120.0, math.radians(30.0), math.radians(40.0))
+        msg = PointStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()  # use the ping time on real data
+        msg.header.frame_id = "usbl_transceiver"
+        msg.point.x, msg.point.y, msg.point.z = x, y, z
+        self.pub.publish(msg)
 
-        # Publish as NavSatFix or PoseWithCovariance
-        # Integrate with EKF
+
+def main():
+    rclpy.init()
+    rclpy.spin(UsblDemo())
+
+
+if __name__ == "__main__":
+    main()
 ```
 
-**Challenges:**
-- Outlier rejection (multipath, noise)
-- Time synchronization
-- Covariance estimation
+For the example numbers, the vehicle is about 79.6 m east, 46.0 m north, and 77.1 m below the transceiver.
 
-## Workshops and Courses
+**Challenges in practice**: outliers from multipath, latency between the ping and the arrival of the fix on the vehicle, and covariance that grows with range. See [acoustic positioning](navigation.md#acoustic-positioning).
 
-### REMARO Summer School
+## Courses and open course material
 
-**[REMARO Underwater Robotics Hackathon](https://github.com/remaro-network/tudelft_hackathon)**
+| Resource | Content |
+|---|---|
+| [MIT 2.680, Unmanned Marine Vehicle Autonomy, Sensing and Communications](https://oceanai.mit.edu/) | MOOS-IvP based course; lecture notes and labs on the oceanai site |
+| [Marine Systems Simulator (MSS)](https://github.com/cybergalactic/MSS) | MATLAB toolbox with vessel and vehicle models, guidance, and control, by T. I. Fossen |
+| [Python Vehicle Simulator](https://github.com/cybergalactic/PythonVehicleSimulator) | Python companion to MSS: AUV, USV, and ship models with control examples |
+| [REMARO hackathon (TU Delft, 2022)](https://github.com/remaro-network/tudelft_hackathon) | Hands-on ROS 2 and Gazebo exercises for underwater robots |
+| [VRX tutorials](https://github.com/osrf/vrx/wiki) | Step-by-step surface vehicle simulation |
+| [ROS 2 documentation](https://docs.ros.org/en/jazzy/) | Official tutorials and concepts |
 
-Educational materials from TU Delft underwater robotics workshop.
+Many universities publish marine robotics course material, including NTNU (marine cybernetics), the University of Girona, the University of Porto, and TU Delft. Search their course pages for current links.
 
-**Contents:**
-- Hands-on exercises
-- Simulation scenarios
-- Team challenges
-- Real robot demonstrations
+## Books
 
-**Topics Covered:**
-- AUV basics
-- Sensor integration
-- Path planning
-- Object detection
+- T. I. Fossen, *Handbook of Marine Craft Hydrodynamics and Motion Control*, 2nd ed., Wiley, 2021. Vehicle models, guidance, navigation, and control. The standard reference.
+- G. Antonelli, *Underwater Robots*, 4th ed., Springer, 2018. Modeling, control, and intervention for underwater vehicles.
+- G. Griffiths (ed.), *Technology and Applications of Autonomous Underwater Vehicles*, Taylor & Francis, 2003. AUV systems and operations.
+- S. W. Moore, H. Bohm, V. Jensen, *Underwater Robotics: Science, Design & Fabrication*, MATE Center, 2010. Practical ROV design; popular with student teams.
 
-### Academic Courses
+## Video channels
 
-Universities offering maritime robotics courses (often with public materials):
+- [Woods Hole Oceanographic Institution](https://www.youtube.com/@WHOI): vehicles and expeditions.
+- [Blue Robotics](https://www.youtube.com/user/BlueRobotics): ROV and USV setup and operation.
+- ROSCon and working group meeting recordings: see [Community](community.md#meetings).
 
-* **MIT:** Autonomous Marine Vehicles
-* **NTNU (Norway):** Marine Cybernetics
-* **University of Porto:** Underwater Robotics
-* **TU Delft:** Marine Robotics
+## WHOI Deep Submergence Lab and acoustic communications
 
-**Many publish:**
-- Lecture slides
-- Lab assignments
-- Project descriptions
-- Code repositories
-
-## Documentation Resources
-
-### Key Package Documentation
-
-* **[robot_localization](https://docs.ros.org/en/melodic/api/robot_localization/html/index.html):** Sensor fusion for navigation
-* **[ros2_control](https://control.ros.org/master/index.html):** Controller framework
-* **[MoveIt 2](https://moveit.ros.org/):** Motion planning (for manipulators)
-* **[Navigation2](https://docs.nav2.org/):** Path planning and navigation stack
-
-### Maritime-Specific Docs
-
-* **VRX Wiki:** Virtual RobotX competition and simulation
-* **UUV Simulator Docs:** Classic underwater simulator (ROS 1)
-* **DAVE Wiki:** DAVE simulator documentation
-
-## Video Tutorials
-
-### YouTube Channels
-
-Channels with maritime robotics content:
-
-* **WHOI Video:** Research vessel and AUV operations, deep submergence vehicle deployments
-* **Blue Robotics:** ROV setup and operation, component tutorials
-* **ROS Developers:** General ROS tutorials applicable to maritime
-
-### WHOI Deep Submergence Lab Resources
-
-Woods Hole Oceanographic Institution has been a pioneer in underwater robotics for decades. Their Deep Submergence Lab has contributed significantly to the field through:
-
-**Historical Contributions:**
-- Development of iconic vehicles: Alvin, Jason, ABE, Sentry
-- Pioneering acoustic communication and positioning systems
-- Advanced sensor integration for deep ocean exploration
-- Real-world operational experience from thousands of dives
-
-**Educational Impact:**
-- [ros_acomms](https://git.whoi.edu/acomms/ros_acomms): Acoustic communication stack with extensive documentation
-- [whoi_ds](https://bitbucket.org/whoidsl/workspace/repositories/): Sensor driver package (repo access may require approval)
-- [ds_sim](https://github.com/Field-Robotics-Lab/ds_sim): Simulation environment for deep submergence vehicles
-- Field-tested code from real ocean deployments
-
-**Why Learn from WHOI:**
-- **Proven in Practice:** Code has thousands of hours of operational sea time
-- **Real-World Focus:** Addresses actual challenges faced in ocean robotics
-- **Comprehensive Documentation:** Built for operational use, not just research
-- **Industry Standard:** WHOI Micro-Modem and acoustic communication protocols are widely adopted
-
-**Learning Resources:**
-- [WHOI GitLab](https://git.whoi.edu/): Active development repositories
-- [WHOI Bitbucket](https://bitbucket.org/whoidsl/workspace/repositories/): Legacy packages and deep submergence lab code
-- Research publications documenting vehicle operations and sensor systems
-
-### Conference Presentations
-
-* **OCEANS Conference:** Technical presentations on marine robotics
-* **ICRA/IROS:** Robotics conferences with maritime tracks
-* **ROSCon:** ROS conference with maritime applications
-
-## Books and Publications
-
-### Recommended Books
-
-* **"Handbook of Marine Craft Hydrodynamics and Motion Control"** by Thor I. Fossen
-  * Definitive text on marine vehicle dynamics
-  * Mathematical foundations for control
-
-* **"Underwater Robotics: Science, Design & Fabrication"** by Steven W. Moore
-  * Practical guide to ROV design
-  * Hands-on projects
-
-* **"Autonomous Underwater Vehicles"** by Gwyn Griffiths
-  * AUV systems and design
-  * Operational considerations
-
-### Key Papers
-
-* Control allocation methods
-* Marine SLAM techniques
-* Underwater communication protocols
-* Path planning for marine vehicles
-
-## Community Resources
-
-### Forums and Discussion
-
-* **ROS Discourse - Maritime Category:** Ask questions, share projects
-* **Zulip Chat:** Real-time discussion with community members
-* **GitHub Discussions:** Package-specific questions
-
-### Example Projects
-
-Learning from others' work:
-
-* Browse repositories in ros-maritime organization
-* Study competition code (VRX participants)
-* Academic research code releases
-
----
-
-*This page was last updated: {{ git_revision_date_localized }}*
-
---8<-- "docs/goatcounter.html"
+The Woods Hole Oceanographic Institution operates deep submergence vehicles such as *Alvin*, *Jason*, and *Sentry*, and develops the WHOI Micro-Modem. Its public software includes [ros_acomms](https://acomms.pages.whoi.edu/ros_acomms/overview.html) for acoustic communication and the Deep Submergence Lab's [Bitbucket workspace](https://bitbucket.org/whoidsl/workspace/repositories/) (ROS 1 drivers and ds_sim). Both are good examples of software that has been used in real operations.

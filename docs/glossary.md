@@ -1,6 +1,11 @@
+---
+title: Glossary
+description: Plain-language definitions of maritime robotics and ROS terms, grouped by topic.
+---
+
 # Glossary
 
-A beginner-friendly guide to maritime robotics terminology. Terms are organized alphabetically within categories for easy reference.
+Plain-language definitions of maritime robotics terms, grouped by topic. Tip: on every page of this site, hover over an acronym (for example DVL or USBL) to see what it means.
 
 ## Core Concepts
 
@@ -88,7 +93,7 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
 ## Control and Motion
 
 **DOF (Degrees of Freedom)**
-: The number of independent directions a robot can move. A car has 2 DOF (forward/backward and turn). Marine robots typically have 6 DOF:
+: The number of independent ways a body can move. A car moves in 3 DOF on the road (forward, sideways, turning) but can control only 2 of them directly. A marine vehicle moves in 6 DOF; how many it can control depends on its thrusters:
   - **Surge:** Forward/backward
   - **Sway:** Left/right (sideways)
   - **Heave:** Up/down
@@ -137,7 +142,7 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
 : Underwater "wireless" communication using sound waves. Much slower than WiFi (much lower data rates) but works underwater where radio doesn't.
 
 **WHOI Micro-Modem**
-: A widely-used underwater acoustic modem developed by Woods Hole Oceanographic Institution. Industry standard for underwater communication.
+: An underwater acoustic modem developed by the Woods Hole Oceanographic Institution, widely used on research vehicles. ros_acomms supports it.
 
 **RF (Radio Frequency)**
 : Traditional wireless communication (like WiFi, cellular, radio). Works great in air, but doesn't work underwater - water absorbs radio waves quickly.
@@ -163,7 +168,7 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
 : A simulated maritime robotics competition based on Gazebo.
 
 **DAVE (Dave Aquatic Virtual Environment)**
-: A simulation environment for underwater vehicles, built on Gazebo.
+: An underwater vehicle simulation environment built on Gazebo. The ROS 2 version is now called POSIM.
 
 **RViz**
 : A visualization tool for ROS. Shows you what the robot "sees" - sensor data, camera images, point clouds, etc. Helpful for debugging.
@@ -180,6 +185,12 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
 **Launch File**
 : A file that starts multiple ROS nodes at once with their configurations. Convenient for starting complex robot systems.
 
+**MCAP**
+: An open log file format for timestamped robot data, and the default storage format of rosbag2.
+
+**QoS (Quality of Service)**
+: ROS 2 topic settings such as reliable or best effort delivery and queue depth. Important on slow or lossy links.
+
 **Colcon / Catkin**
 : Build tools for ROS. Colcon is used in ROS 2, Catkin was used in ROS 1. They compile your code and set up the workspace.
 
@@ -192,7 +203,7 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
 : Ocean research institute in California with significant work in marine robotics.
 
 **ROS-Maritime**
-: The working group focused on marine robotics within the larger ROS community. Maintains packages, documentation, and hosts meetings.
+: The ROS Maritime Community Working Group, an open group in the ROS community that maintains this site, shares interfaces, and hosts monthly meetings. See [Community](community.md).
 
 ## Competition and Standards
 
@@ -222,10 +233,19 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
   - X points East
   - Y points North
   - Z points Up (away from Earth)
-  - Common in robotics and computer graphics
+  - The ROS standard for world frames (REP 103)
 
 **Body Frame**
-: A coordinate system attached to the robot. X typically points forward, Y to the right, Z down. Moves and rotates with the robot.
+: A coordinate system attached to the robot that moves and rotates with it. **In ROS** (REP 103) the body frame is FLU: x forward, y left, z up. **In marine and aerospace practice** it is often FRD: x forward, y right, z down. See [Frames and conventions](conventions.md).
+
+**FLU / FRD**
+: Forward-Left-Up and Forward-Right-Down body frames. ROS uses FLU; many marine instruments and autopilots use FRD.
+
+**Heading**
+: The direction the bow points, measured clockwise from north (true or magnetic). Not the same as ROS yaw, which is measured counter-clockwise from east: yaw = 90° − heading.
+
+**REP 103 / REP 105**
+: ROS Enhancement Proposals that define units and axis conventions (103) and the `map`, `odom`, and `base_link` frames (105).
 
 ## Miscellaneous Terms
 
@@ -254,12 +274,6 @@ A beginner-friendly guide to maritime robotics terminology. Terms are organized 
 
 ## Need More Help?
 
-- **Can't find a term?** Ask on [ROS Discourse](https://discourse.ros.org/c/maritime/36)
+- **Can't find a term?** Ask on [ROS Discourse](https://discourse.openrobotics.org/c/community-groups/marine-robotics/36)
 - **Want deeper explanation?** See [Education & Tutorials](education_and_tutorials.md)
 - **Just starting?** Check the [Getting Started Guide](getting_started.md)
-
----
-
-*This page was last updated: {{ git_revision_date_localized }}*
-
---8<-- "docs/goatcounter.html"

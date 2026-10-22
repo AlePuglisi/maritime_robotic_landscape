@@ -1,125 +1,82 @@
-# Maritime Vehicle Types
-
-Maritime robotics encompasses a diverse range of vehicle platforms, each designed for specific environments and missions. This page provides an overview of the main vehicle categories used in ROS-based maritime robotics.
-
-## Surface Vehicles (ASV/USV)
-
-Autonomous Surface Vehicles (ASVs) and Uncrewed Surface Vehicles (USVs) operate on the water's surface. These platforms are commonly used for:
-
-- Hydrographic surveying and mapping
-- Environmental monitoring
-- Autonomous cargo transport
-- Search and rescue operations
-- Oceanographic data collection
-
-**Characteristics:**
-- Degrees of Freedom: Typically 3-4 DOF (surge, sway, yaw, sometimes heave)
-- Typical Sensors: GPS/GNSS, IMU, cameras, radar, lidar, weather stations, AIS
-- Propulsion: Propellers, azimuth thrusters, water jets, sail (for autonomous sailboats)
-- Power: Batteries, solar panels, diesel generators, hybrid systems
-- Communication: RF, cellular, satellite
-
-**Common Platforms:**
-- Autonomous survey vessels
-- Wave energy converters (WEC)
-- Autonomous sailboats
-- Multi-hull vessels (catamarans, trimarans)
-
-## Underwater Vehicles
-
-### Autonomous Underwater Vehicles (AUVs)
-
-AUVs are untethered robotic submarines that operate independently underwater. They come in two main configurations:
-
-#### Torpedo-Shaped AUVs
-- **Design:** Streamlined, cylindrical hull optimized for forward motion
-- **Propulsion:** Rear-mounted propeller(s)
-- **Use Cases:** Long-range missions, oceanographic surveys, pipeline inspection
-- **DOF:** Primarily 6-DOF but optimized for forward motion
-
-#### Hovering AUVs
-- **Design:** More compact, multi-thruster configuration
-- **Propulsion:** Multiple thrusters for omnidirectional movement
-- **Use Cases:** Detailed inspection, intervention tasks, confined spaces
-- **DOF:** Full 6-DOF (surge, sway, heave, roll, pitch, yaw)
-
-**Typical Sensors:**
-- Doppler Velocity Log (DVL) for velocity and altitude
-- Inertial Navigation System (INS) / IMU
-- Depth sensor / pressure transducer
-- Sonar (imaging, multibeam, side-scan, forward-looking)
-- Cameras (visible light, low-light)
-- CTD (Conductivity, Temperature, Depth)
-- Hydrophones
-
-### Remotely Operated Vehicles (ROVs)
-
-ROVs are tethered underwater robots controlled by operators on the surface.
-
-**Characteristics:**
-- **Tether:** Physical cable for power and communication
-- **Control:** Real-time operator control with varying levels of automation
-- **DOF:** Typically 4-6 DOF depending on thruster configuration
-- **Power:** Supplied via tether (mission duration limited by surface support)
-- **Use Cases:** Deep-sea exploration, underwater construction, ship hull inspection, scientific research
-
-**Common Configurations:**
-- Observation-class ROVs: Lightweight, for inspection
-- Work-class ROVs: Heavy-duty, with manipulators
-- Hybrid ROVs/AUVs: Can operate in both modes
-
-### Underwater Gliders
-
-Gliders are a special class of AUV that use buoyancy control for propulsion.
-
-**Characteristics:**
-- **Propulsion:** Buoyancy engine (no propeller)
-- **Motion:** Sawtooth pattern through water column
-- **Endurance:** Long-duration missions, depending on vehicle design
-- **Speed:** Slow relative to propeller-driven vehicles
-- **Use Cases:** Long-duration oceanographic monitoring, large-scale surveys
-- **Sensors:** Typically CTD, oxygen sensors, fluorometers, acoustic sensors
-
-## Specialized Platforms
-
-### Autonomous Sailboats
-
-Unmanned sailing vessels using wind power for propulsion.
-
-- **Propulsion:** Wind-powered sail with autonomous control
-- **Endurance:** Long endurance with proper design
-- **Use Cases:** Ocean monitoring, long-duration surveys, racing competitions
-- **Control Challenges:** Wind prediction, sail trim optimization, path planning
-
-### Intervention Vehicles
-
-Underwater vehicles equipped with manipulators for interaction tasks.
-
-- **Manipulators:** Robotic arms (typically 1-2 per vehicle)
-- **End Effectors:** Grippers, cutters, sensors, tools
-- **Use Cases:** Valve turning, sample collection, cable laying, underwater construction
-
-### Bio-Inspired Vehicles
-
-Vehicles that mimic marine animal locomotion.
-
-- **Biomimetic fish:** Fin-based propulsion
-- **Turtle robots:** Flipper-based propulsion
-- **Jellyfish robots:** Pulsed propulsion
-- **Use Cases:** Research, stealth operations, efficient low-speed propulsion
-
-## Vehicle Comparison
-
-Compare vehicles using measurable, documented factors from manufacturers and field reports:
-
-- Operating environment and depth rating
-- Mission duration and energy source
-- Required degrees of freedom and maneuverability
-- Communications constraints
-- Payload capacity and integration needs
-
+---
+title: Vehicle types
+description: Surface and underwater vehicle classes in maritime robotics - ASVs, AUVs, ROVs, gliders, and specialized platforms - and what each means for software.
 ---
 
-*This page was last updated: {{ git_revision_date_localized }}*
+# Vehicle types
 
---8<-- "docs/goatcounter.html"
+Maritime robots differ mainly in where they operate (on or below the surface), how they get power and communication (tether or not), and how they move (propellers, thrusters, buoyancy, or sail). Each choice changes the software.
+
+<div class="grid cards" markdown>
+
+-   <svg class="mrl-vehicle" viewBox="0 0 200 75" role="img" aria-label="Surface vehicle"><rect x="0" y="48" width="200" height="27" class="mrl-svg-water"/><path d="M30 48 L170 48 L160 58 L40 58 Z" class="mrl-svg-hull"/><path d="M30 44 L170 44 L165 48 L35 48 Z" class="mrl-svg-hull" opacity="0.7"/><rect x="85" y="28" width="30" height="16" rx="2" class="mrl-svg-accent"/><line x1="100" y1="28" x2="100" y2="12" class="mrl-svg-line" stroke-width="2"/><circle cx="100" cy="10" r="3" class="mrl-svg-accent"/></svg>
+
+    **Surface vehicles (ASV / USV)**
+
+    ---
+
+    Work on the surface: survey, monitoring, logistics, and relay for underwater vehicles. GNSS, radio, and solar power are available. Usually 2 or 3 controlled DOF (surge and yaw, sometimes sway).
+
+    *Software focus:* GNSS and heading fusion, obstacle detection (radar, lidar, AIS, cameras), COLREGs, waves.
+
+-   <svg class="mrl-vehicle" viewBox="0 0 200 75" role="img" aria-label="Torpedo AUV"><rect x="0" y="0" width="200" height="75" class="mrl-svg-water"/><path d="M40 30 H150 Q172 37 150 44 H40 Q28 37 40 30 Z" class="mrl-svg-hull"/><path d="M40 30 L30 22 L36 37 L30 52 L40 44 Z" class="mrl-svg-accent"/><circle cx="26" cy="37" r="4" class="mrl-svg-line" fill="none" stroke-width="2"/></svg>
+
+    **Torpedo AUVs**
+
+    ---
+
+    Untethered, streamlined, efficient for long survey lines. Usually underactuated: one propeller plus fins or a vectored thruster.
+
+    *Software focus:* DVL and INS dead reckoning, depth and altitude control, mission autonomy, acoustic communication.
+
+-   <svg class="mrl-vehicle" viewBox="0 0 200 75" role="img" aria-label="Hovering AUV or ROV"><rect x="0" y="0" width="200" height="75" class="mrl-svg-water"/><rect x="62" y="22" width="76" height="34" rx="6" class="mrl-svg-hull"/><rect x="50" y="18" width="14" height="10" rx="2" class="mrl-svg-accent"/><rect x="136" y="18" width="14" height="10" rx="2" class="mrl-svg-accent"/><rect x="50" y="50" width="14" height="10" rx="2" class="mrl-svg-accent"/><rect x="136" y="50" width="14" height="10" rx="2" class="mrl-svg-accent"/><path d="M100 22 C100 8 120 4 150 2" class="mrl-svg-line" fill="none" stroke-width="2" stroke-dasharray="4 3"/></svg>
+
+    **Hovering AUVs and ROVs**
+
+    ---
+
+    Many thrusters for 4 to 6 controlled DOF; hold station for inspection and intervention. ROVs are tethered and piloted; hovering AUVs are free.
+
+    *Software focus:* thrust allocation, station keeping, perception near structures, manipulation, teleoperation.
+
+-   <svg class="mrl-vehicle" viewBox="0 0 200 75" role="img" aria-label="Underwater glider"><rect x="0" y="0" width="200" height="75" class="mrl-svg-water"/><path d="M10 10 L50 60 L90 10 L130 60 L170 10" class="mrl-svg-line" fill="none" stroke-width="1.5" stroke-dasharray="3 4"/><g transform="rotate(-38 110 40)"><path d="M85 37 H130 Q140 40 130 43 H85 Q80 40 85 37 Z" class="mrl-svg-hull"/><path d="M100 40 L120 28 L114 40 Z" class="mrl-svg-accent"/></g></svg>
+
+    **Underwater gliders**
+
+    ---
+
+    Change buoyancy to move in a sawtooth pattern with wings, with no propeller. Slow, but missions last weeks to months.
+
+    *Software focus:* energy-aware planning, sparse communication at each surfacing, dead reckoning with unknown currents.
+
+</div>
+
+## Comparison
+
+| | ASV / USV | Torpedo AUV | Hovering AUV | ROV | Glider |
+|---|---|---|---|---|---|
+| Tether | No | No | No | Yes | No |
+| Power | Battery, solar, fuel | Battery | Battery | Through the tether | Battery |
+| Endurance | Hours to months | Hours to days | Hours | As long as the support vessel stays | Weeks to months |
+| Controlled DOF | 2-3 | 3-4 (surge, heading, depth or pitch) | 4-6 | 4-6 | Pitch, heading, buoyancy |
+| Position source | GNSS | DVL + INS; GNSS at surface; acoustic | DVL + INS; acoustic; vision | Topside USBL; DVL | Dead reckoning; GNSS at surface |
+| Communication | RF, cellular, satellite | Acoustic; RF and satellite at surface | Acoustic | Tether (high bandwidth) | Satellite at surface |
+| Typical ROS 2 stacks | Project11, VRX models, Nav2 | SMaRC 2, MVP | Blue, MVP | Blue, Orca, ArduSub | Mostly vendor software |
+
+## Specialized platforms
+
+- **Autonomous sailboats** use wind for propulsion and need sail and rudder control with wind-aware routing. See the rs750 simulation in [Simulation](simulation.md).
+- **Intervention vehicles** carry one or two manipulators for valve turning, sampling, or tool use. Software: MoveIt 2 for arm planning, whole-body or impedance control (auv_controllers), and vehicle station keeping.
+- **Hybrid ROV / AUV (HROV)** vehicles switch between tethered piloting and free autonomous operation.
+- **Wave-powered and energy-harvesting platforms** convert wave motion into propulsion or electrical power; see MBARI WEC in [Simulation](simulation.md).
+- **Bio-inspired vehicles** use fins, flippers, or pulsed jets; mostly research platforms.
+
+## What it means for your software
+
+| If your vehicle is... | Then you need... |
+|---|---|
+| Underactuated (most ASVs, torpedo AUVs) | Guidance that controls course and speed, not sway; LOS path following |
+| Over-actuated (most ROVs) | Thrust allocation with saturation handling |
+| Untethered and submerged | Full onboard autonomy, safe failsafes, and acoustic or no communication |
+| Tethered | Topside processing is possible; manage tether drag in control |
+| Long-endurance | Energy-aware mission planning and robust recovery from faults |

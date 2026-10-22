@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and Deployment
         run: |
-          mkdocs gh-deploy --force
+          mkdocs gh-deploy --force --strict
 
       - name: Checking Links
         continue-on-error: true
