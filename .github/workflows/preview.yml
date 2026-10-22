@@ -25,7 +25,11 @@ jobs:
 
       - name: Installing dependencies
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+
+      - name: Testing catalog hook and docs examples
+        run: |
+          python -m pytest -q tests
 
       - name: Build and Deployment
         if: github.event.action != 'closed'

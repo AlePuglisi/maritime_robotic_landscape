@@ -59,9 +59,11 @@ pip install -r requirements.txt
 mkdocs serve        # open http://127.0.0.1:8000
 ```
 
-Before you open a pull request, run a strict build. It fails on broken internal links and invalid catalog entries:
+Before you open a pull request, run the tests and a strict build. The tests check the catalog data and run the code examples published on the Conventions and Control pages; the strict build fails on broken internal links and invalid catalog entries:
 
 ```bash
+pip install -r requirements-test.txt
+python -m pytest -q tests
 mkdocs build --strict
 ```
 
@@ -82,4 +84,5 @@ python scripts/update_repo_status.py   # set GITHUB_TOKEN to also read archived 
 | `includes/abbreviations.md` | Acronym tooltips used on every page |
 | `overrides/` | Theme overrides (analytics) |
 | `scripts/update_repo_status.py` | Weekly activity refresh |
+| `tests/` | Tests for the catalog hook, the status script, and the published code examples |
 | `.github/workflows/` | Build, PR preview, and weekly refresh workflows |
